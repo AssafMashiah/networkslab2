@@ -68,6 +68,8 @@ public class CommandsServiceProxy implements ICommandsService, IProxy {
 		// send the request
 		toServer.println(request.toString());
 		
+		tracer.TraceToConsole("echo proxy data sent");
+		
 		// receive data
 		HttpResponseParser response = new HttpResponseParser();
 		String[] responseHeaders = response.GetHeaderTextFromStream(fromServer).split(HttpParser.CRLF);
@@ -75,6 +77,8 @@ public class CommandsServiceProxy implements ICommandsService, IProxy {
 		int contentLenght = response.HttpHeadersParser(responseHeaders);
 		
 		String retVal = "";
+		
+		tracer.TraceToConsole("echo proxy data received");
 		
 		if (contentLenght > 0)
 		{
