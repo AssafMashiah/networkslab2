@@ -3,9 +3,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.net.UnknownHostException;
-
-import org.omg.CORBA.portable.ResponseHandler;
 
 
 public class CommandsServiceProxy implements ICommandsService, IProxy {
