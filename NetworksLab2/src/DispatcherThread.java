@@ -147,13 +147,19 @@ public class DispatcherThread implements Runnable {
 			}
 			else
 			{
+				String[] params = null;
+				params = request.GetQueryStringParams(HttpQueryStringType.BOTH).values().toArray(new String[0]);
+
 				switch(HttpServices.valueOf(uriData.ServiceName))
 				{
 				case commands_service:
-					String[] params = null;
-					params = request.GetQueryStringParams(HttpQueryStringType.BOTH).values().toArray(new String[0]);
 					content = CommandsService.get_instance().callFunction(CommandsService.Functions.valueOf(uriData.FunctionName), params);
 					break;
+				case commnads_service_proxy:
+					CommandsServiceProxy proxy = new CommandsServiceProxy();
+					proxy.DestinationIP = "127.0.0.1";
+					proxy.DestinationPort = 10000;
+					content = proxy.echo(params[0]);
 					default:
 						// 404 (cannot happen...)
 				}
@@ -166,6 +172,11 @@ public class DispatcherThread implements Runnable {
 				response.AddHeader(new HttpHeader("Server", m_ServerName));
 			}
 			
+		}
+		catch (HttpRequestParsingException e)
+		{
+			tracer.TraceToConsole("server has encountered a 500 error");
+			response = generateHttpErrorResponse(HttpResponseCode.INTERNAL_SERVER_ERROR, request.GetHttpVersion());
 		}
 		catch (HttpServiceException e)
 		{

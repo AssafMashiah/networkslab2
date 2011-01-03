@@ -148,7 +148,15 @@ public class HttpResponseParser extends HttpParser {
 		// set method...
 		if (toky.hasMoreTokens()) {
 			try {
-				SetHttpVersion(HttpVersion.valueOf(toky.nextToken()));
+				String httpVersion = toky.nextToken();
+				if (httpVersion.equals(HttpVersion.One.GetHTTPVersion())) {
+					this.SetHttpVersion(HttpVersion.One);
+				} else if (httpVersion.equals(HttpVersion.OneDotOne
+						.GetHTTPVersion())) {
+					this.SetHttpVersion(HttpVersion.OneDotOne);
+				} else {
+					throw new HttpRequestParsingException("Invalid HTTP Version!");
+				}
 			} catch (Exception e) {
 				throw new HttpResponseParsingException("Invalid HTTP Version!");
 			}
@@ -159,7 +167,7 @@ public class HttpResponseParser extends HttpParser {
 		// set requested URI / resource
 		if (toky.hasMoreTokens()) {
 			try {
-				m_ResponseCode = HttpResponseCode.valueOf(toky.nextToken());
+				m_ResponseCode = HttpResponseCode.GetResponseCode(Integer.parseInt(toky.nextToken()));
 			} catch (Exception e) {
 				throw new HttpResponseParsingException("Invalid HTTP Response Code!");
 			}

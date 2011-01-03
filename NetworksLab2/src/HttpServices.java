@@ -6,6 +6,7 @@
  */
 public enum HttpServices {
 
-	commands_service
+	commands_service,
+	commnads_service_proxy
 	
 }

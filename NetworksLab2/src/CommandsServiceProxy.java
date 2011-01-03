@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class CommandsServiceProxy implements ICommandsService, IProxy {
+public class CommandsServiceProxy extends ProxyBase implements ICommandsService {
 
 	// used for trace messages
 	private static final Tracer tracer = Tracer.getTracerForThisClass();
@@ -39,7 +39,7 @@ public class CommandsServiceProxy implements ICommandsService, IProxy {
 	}
 
 	
-	private String echo(String s) 
+	public String echo(String s) 
 		throws 	IOException, HttpProxyException, 
 				HttpHeaderParsingException, HttpResponseParsingException
 	{
@@ -72,7 +72,7 @@ public class CommandsServiceProxy implements ICommandsService, IProxy {
 		tracer.TraceToConsole("echo proxy data received");
 		
 		// validate response
-		if (!response.GetHttpResponseCode().equals(HttpResponseCode.OK))
+		if (!response.GetHttpResponseCodeObject().equals(HttpResponseCode.OK))
 		{
 			throw new HttpProxyException(String.format("Destination reported an error: %s", response.GetHttpResponseCode()));
 		}

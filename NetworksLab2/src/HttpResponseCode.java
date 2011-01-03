@@ -35,6 +35,39 @@ public enum HttpResponseCode {
 		return m_Description;
 	}
 
+	/**
+	 * Translate numeric code to enum value
+	 * @param code
+	 * @return
+	 */
+	public static HttpResponseCode GetResponseCode(int code)
+	{
+		HttpResponseCode retVal = null;
+		switch (code)
+		{
+		case 200:
+			retVal = HttpResponseCode.OK;
+			break;
+		case 301:
+			retVal = HttpResponseCode.MOVED_PERMANENTLY;
+			break;
+		case 404:
+			retVal = HttpResponseCode.NOT_FOUND;
+			break;
+		case 408:
+			retVal = HttpResponseCode.REQUEST_TIMEOUT;
+			break;
+		case 500:
+			retVal = HttpResponseCode.INTERNAL_SERVER_ERROR;
+			break;
+		case 501:
+			retVal = HttpResponseCode.NOT_IMPLEMENTED;
+			break;
+		}
+		
+		return retVal;
+	}
+	
 	@Override
 	public String toString() {
 
