@@ -171,6 +171,30 @@ public abstract class HttpParser
 	}
 	
 	/**
+	 * Reads the content off the request
+	 * 
+	 * @param contentLength
+	 *            The content length
+	 * @param in
+	 *            The buffered reader
+	 * @return The content data
+	 * @throws IOException
+	 *             If there was a problem while reading from the stream
+	 */
+	protected void GetContentFromStream(int contentLength, BufferedReader in)
+			throws IOException {
+		char[] ccontent = new char[contentLength];
+
+		// we know exactly how much to read now
+		if (in != null) {
+			in.read(ccontent);
+		}
+		
+		// we want to ensure the content is preserved with its encoding (which should be ASCII, but may not be?)
+		SetContent(new String(ccontent).getBytes());
+	}
+
+	/**
 	 * 
 	 * @return The parser header as a string
 	 */

@@ -4,14 +4,10 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-
 public class CommandsServiceProxy implements ICommandsService, IProxy {
 
 	// used for trace messages
 	private static final Tracer tracer = Tracer.getTracerForThisClass();
-
-	
-	
 	
 	public String callFunction(Functions functionName, String[] params)
 			throws HttpServiceException {
@@ -44,8 +40,8 @@ public class CommandsServiceProxy implements ICommandsService, IProxy {
 
 	
 	private String echo(String s) 
-		throws 	HttpResponseParsingException, 
-				IOException, HttpHeaderParsingException, HttpServiceException
+		throws 	IOException, HttpProxyException, 
+				HttpHeaderParsingException, HttpResponseParsingException
 	{
 		tracer.TraceToConsole(String.format("Starting echo proxy, Destination: %s", DestinationIP));
 		
@@ -71,27 +67,16 @@ public class CommandsServiceProxy implements ICommandsService, IProxy {
 		tracer.TraceToConsole("echo proxy data sent");
 		
 		// receive data
-		HttpResponseParser response = new HttpResponseParser();
-		String[] responseHeaders = response.GetHeaderTextFromStream(fromServer).split(HttpParser.CRLF);
-		response.HttpResponseLineParser(responseHeaders[0]);
-		int contentLenght = response.HttpHeadersParser(responseHeaders);
-		
-		String retVal = "";
+		HttpResponseParser response = new HttpResponseParser(fromServer);
 		
 		tracer.TraceToConsole("echo proxy data received");
 		
-		if (contentLenght > 0)
+		// validate response
+		if (!response.GetHttpResponseCode().equals(HttpResponseCode.OK))
 		{
-			retVal = new String(response.GetContent());
-		}
-		else
-		{
-			throw new HttpServiceException("Invalid response for echo");
+			throw new HttpProxyException(String.format("Destination reported an error: %s", response.GetHttpResponseCode()));
 		}
 		
-		return retVal;
+		return new String(response.GetContent());
 	}
-	
-	
-	
 }

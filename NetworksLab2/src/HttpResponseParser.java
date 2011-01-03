@@ -1,3 +1,5 @@
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.StringTokenizer;
 
 
@@ -76,9 +78,31 @@ public class HttpResponseParser extends HttpParser {
 		}
 	}
 	
-	public HttpResponseParser()
+	/**
+	 * Creates a new response directly from a incoming data stream
+	 * @param reader The reader with the data
+	 * @throws HttpHeaderParsingException
+	 * @throws HttpResponseParsingException
+	 * @throws IOException
+	 */
+	public HttpResponseParser(BufferedReader reader) throws HttpHeaderParsingException, HttpResponseParsingException, IOException
 	{
-		
+		String[] responseHeaders = GetHeaderTextFromStream(reader).split(HttpParser.CRLF);
+		HttpResponseLineParser(responseHeaders[0]);
+		int contentLength = HttpHeadersParser(responseHeaders);
+		if (contentLength > 0)
+		{
+			GetContentFromStream(contentLength, reader);
+		}
+	}
+	
+	/**
+	 * Gets the response code object
+	 * @return The response code object!
+	 */
+	public HttpResponseCode GetHttpResponseCodeObject()
+	{
+		return m_ResponseCode;
 	}
 	
 	/**
