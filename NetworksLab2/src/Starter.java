@@ -10,10 +10,14 @@ public class Starter {
 	
 	public static void main(String[] args) {
 		DispatcherServer server = null;
+		FriendRequestServer friend_server = null;
 		
 		try {
 			server = new DispatcherServer();
 			new Thread(server).start();
+			
+			friend_server = new FriendRequestServer();
+			new Thread(friend_server).start();
 			
 			System.in.read();
 		} catch (Exception e) {
