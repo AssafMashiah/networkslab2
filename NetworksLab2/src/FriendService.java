@@ -1,3 +1,6 @@
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -185,13 +188,25 @@ public class FriendService implements IFriendService
 		
 	}
 
-	public void LookForFriends() throws UnknownHostException 
+	public void LookForFriends() throws IOException 
 	{
+		DatagramSocket socket = new DatagramSocket();
 		
-		String payload = String.format("Be my friend? %s:%d", InetAddress.getLocalHost().getHostAddress(), 1);
+		InetAddress hostIP = InetAddress.getLocalHost();
+		int hostPort = 20000;
 		
-		// create a UDP datagram and broadcast the payload
+		String payload = String.format("Be my friend? %s:%d", hostIP.getHostAddress(), hostPort);
 		
+		// create a UDP Datagram and broadcast the payload
+		String[] IPchunks = hostIP.getHostAddress().split("[.]");
+		
+		String brodcastIP = String.format("%s.%s.%s.%d", IPchunks[0], IPchunks[1], IPchunks[2], 255);
+		
+		DatagramPacket dgram = new DatagramPacket(payload.getBytes(), payload.getBytes().length, InetAddress.getByName(brodcastIP) , hostPort);
+		
+		tracer.TraceToConsole("UDP Brodcasting sent");
+		
+		socket.send(dgram);
 	}
 
 //	private String[] GetFriends() 
