@@ -10,6 +10,15 @@ public class FriendInfo {
 	// Port Number the friend is listening to
 	public int Port;
 	
+	public FriendInfo(String friendLineData)
+	{
+		String[] info = friendLineData.split(":");
+		
+		this.NickName = info[0];
+		this.IP = info[1];
+		this.Port = Integer.parseInt(info[2]);
+	}
+	
 	public FriendInfo(String nickname, String IP, int port)
 	{
 		this.NickName = nickname;
