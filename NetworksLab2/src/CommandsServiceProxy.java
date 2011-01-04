@@ -1,8 +1,4 @@
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
 
 public class CommandsServiceProxy extends ProxyBase implements ICommandsService {
 
@@ -38,43 +34,24 @@ public class CommandsServiceProxy extends ProxyBase implements ICommandsService 
 		return retVal.toString();
 	}
 
-	
 	public String echo(String s) 
 		throws 	IOException, HttpProxyException, 
 				HttpHeaderParsingException, HttpResponseParsingException
 	{
 		tracer.TraceToConsole(String.format("Starting echo proxy, Destination: %s", DestinationIP));
 		
-		// define the request
-		HttpRequestParser request = new HttpRequestParser();
-		request.SetMethod(HttpRequestMethod.GET);
-		request.SetHttpVersion(HttpVersion.One);
-		request.SetRequestURI(String.format("/commands_service/echo?string=%s", s));
+		HttpRequestParser request = GetRequest(HttpRequestMethod.GET, "/commands_service/echo", s);
 		
 		tracer.TraceToConsole(String.format("Sending:\n%s\nTo: %s", request.toString(), DestinationIP));
 		
-		// open tcp socket to destination
-		Socket sock = new Socket(DestinationIP, DestinationPort);
-		
-		tracer.TraceToConsole("Proxy Connected");
-		
-		PrintWriter toServer = new PrintWriter(sock.getOutputStream(), true);
-		BufferedReader fromServer = new BufferedReader(new InputStreamReader(sock.getInputStream(), "ASCII"));
-		
-		// send the request
-		toServer.println(request.toString());
-		
-		tracer.TraceToConsole("echo proxy data sent");
-		
-		// receive data
-		HttpResponseParser response = new HttpResponseParser(fromServer);
+		HttpResponseParser response = SendData(request);
 		
 		tracer.TraceToConsole("echo proxy data received");
 		
 		// validate response
 		if (!response.GetHttpResponseCodeObject().equals(HttpResponseCode.OK))
 		{
-			throw new HttpProxyException(String.format("Destination reported an error: %s", response.GetHttpResponseCode()));
+			throw new HttpProxyException(String.format("Destination reported an error during echo: %s", response.GetHttpResponseCode()));
 		}
 		
 		return new String(response.GetContent());

@@ -183,6 +183,11 @@ public class DispatcherThread implements Runnable {
 			tracer.TraceToConsole("server has encountered a 500 error");
 			response = generateHttpErrorResponse(HttpResponseCode.INTERNAL_SERVER_ERROR, request.GetHttpVersion());
 		}
+		catch (HttpProxyException e)
+		{
+			tracer.TraceToConsole("Proxy has encountered an error from server: " + e.getMessage());
+			response = generateHttpErrorResponse(HttpResponseCode.INTERNAL_SERVER_ERROR, request.GetHttpVersion());
+		}
 		catch (Exception e)
 		{
 			// we catch a general exception as everything we do is logic processing on the request data

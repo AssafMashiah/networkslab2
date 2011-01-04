@@ -1,3 +1,5 @@
+import java.io.IOException;
+
 /**
  * 
  * There is only one of me!!! <br>
@@ -38,17 +40,10 @@ public class CommandsService implements ICommandsService {
 			
 			switch (functionName) {
 			case echo:
-				for (String s : params)
-				{
-					retVal.append(echo(s));
-					retVal.append("\r\n");
-				}
-				
+				retVal.append(echo(params[0]));
 				break;
 			case get_main_page:
-				HTMLTemplate t = new HTMLTemplate("mainpage.html");
-				t.AddValueToTemplate("SERVER", "http://localhost/");
-				retVal.append(t.CompileTemplate());
+				retVal.append(getMainPage());
 				break;
 			default:
 				// this is a 404 error, it should not happen (right now no code
@@ -75,8 +70,22 @@ public class CommandsService implements ICommandsService {
 	 *            This will be echoed
 	 * @return return (echo, get it?)
 	 */
-	private String echo(String param) {
+	private String echo(String param) 
+	{
 		tracer.TraceToConsole("Echo() called with param value: " + param);
 		return String.format("%s: %s", FROM_WHO, param);
+	}
+	
+	/**
+	 * Gets the main page
+	 * @return A HTML string of the main page to display
+	 * @throws IOException If there was a problem accessing the template
+	 */
+	private String getMainPage() throws IOException
+	{
+		tracer.TraceToConsole("GetMainPage() called");
+		HTMLTemplate t = new HTMLTemplate("mainpage.html");
+		t.AddValueToTemplate("SERVER", "http://localhost/");
+		return t.CompileTemplate();
 	}
 }
