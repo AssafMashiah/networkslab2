@@ -12,5 +12,4 @@ public interface IFriendService {
 		ack_friend_request
 	}
 	
-	public String callFunction(IFriendService.Functions functionName, String[] params) throws HttpServiceException;
 }

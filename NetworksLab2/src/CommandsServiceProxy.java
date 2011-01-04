@@ -5,33 +5,15 @@ public class CommandsServiceProxy extends ProxyBase implements ICommandsService 
 	// used for trace messages
 	private static final Tracer tracer = Tracer.getTracerForThisClass();
 	
-	public String callFunction(Functions functionName, String[] params)
-			throws HttpServiceException {
-		StringBuilder retVal;
-		try
-		{
-			retVal = new StringBuilder();
-			
-			switch (functionName) {
-			case echo:
-				retVal.append(echo(params[0]));
-				break;
-			case get_main_page:
-				HTMLTemplate t = new HTMLTemplate("mainpage.html");
-				t.AddValueToTemplate("SERVER", "http://localhost/");
-				retVal.append(t.CompileTemplate());
-				break;
-			default:
-				// this is a 404 error, it should not happen (right now no code
-				// because it cannot happen at this place as we get enum as input)
-			}
-		}
-		catch (Exception e)
-		{
-			throw new HttpServiceException("Internal error in commands service", e);
-		}
+	public CommandsServiceProxy()
+	{
 		
-		return retVal.toString();
+	}
+	
+	public CommandsServiceProxy(String dest, int port)
+	{
+		this.DestinationIP = dest;
+		this.DestinationPort = port;
 	}
 
 	public String echo(String s) 

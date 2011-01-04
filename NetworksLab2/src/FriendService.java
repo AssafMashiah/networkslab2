@@ -41,7 +41,6 @@ public class FriendService implements IFriendService
 		m_FriendInfoList = new ArrayList<FriendInfo>();
 	}
 	
-	@Override
 	public String callFunction(Functions functionName, String[] params)
 			throws HttpServiceException 
 	{
@@ -98,6 +97,7 @@ public class FriendService implements IFriendService
 			
 			// build my own friend list
 			String myFriendList = GetFriendsInOneLine();
+			myFriendList = String.format("%s;%s", m_MyInfo, myFriendList);
 			String addedIP = firstOne.IP;
 			int addedPort = firstOne.Port;
 			

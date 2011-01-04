@@ -96,8 +96,9 @@ public class FriendRequestServer implements Runnable {
 				tracer.TraceToConsole("A new friend request has arrived!");
 				
 				// are we talking to ourselves?
-				if (receivePacket.getAddress().getHostAddress().equals(InetAddress.getLocalHost().getHostAddress()) ||
-						receivePacket.getAddress().getHostAddress().equals("127.0.0.1"))
+//				if (receivePacket.getAddress().getHostAddress().equals(InetAddress.getLocalHost().getHostAddress()) ||
+//						receivePacket.getAddress().getHostAddress().equals("127.0.0.1"))
+				if (receivePacket.getAddress().getHostAddress().equals(InetAddress.getLocalHost().getHostAddress()))
 				{
 					tracer.TraceToConsole("Got a friend request from ourselves");
 				}
