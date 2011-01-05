@@ -38,6 +38,8 @@ public class FriendRequestServer implements Runnable {
 			// set the port number
 			m_portNumber = Integer.parseInt(port);
 			
+			FriendService.get_instance().SetFriendServerPort(m_portNumber);
+			
 		} catch (Exception e) {
 			String errMessage = String.format(
 					"Error loading Configuration from %s!", configFile);

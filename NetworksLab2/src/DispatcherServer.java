@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -73,6 +74,12 @@ public class DispatcherServer implements Runnable {
 				m_timeout = Integer.parseInt(timeout);
 			}
 			tracer.TraceToConsole("Timeout was set to: " + m_timeout);
+			
+			// set my info
+			String nickname = m_Configuration.GetValue("nickname");
+			String IP = InetAddress.getLocalHost().getHostName();
+			FriendService.get_instance().SetMyInfo(new FriendInfo(nickname, IP, m_portNumber));
+			FriendService.get_instance().SetDispatcherPort(m_portNumber);
 		} catch (Exception e) {
 			String errMessage = String.format(
 					"Error loading Configuration from %s!", configFile);
