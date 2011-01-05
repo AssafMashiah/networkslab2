@@ -94,12 +94,18 @@ public class DispatcherServer implements Runnable {
 	 */
 	public void stop() {
 		this.m_IsStopped = true;
+		tracer.TraceToConsole("Closing server. BYE BYE");
+		tracer.stop();
 		try {
 			if (this.m_Server != null)
 			{
 				this.m_Server.close();
 			}
 		} catch (IOException e) {
+			if (this.m_Server != null)
+			{
+				this.m_IsStopped = false;
+			}
 			throw new RuntimeException("Error closing server", e);
 		}
 	}
