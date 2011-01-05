@@ -99,7 +99,8 @@ public class DispatcherThread implements Runnable {
 			// trace the response header
 			tracer.TraceToConsole("Response headers are:\r\n" + response.HeaderString());
 			
-			output.write(response.toString().getBytes());
+			output.write(response.toString(true).getBytes());
+			output.write(response.GetContent());
 			output.flush();
 			output.close();
 		} catch (IOException e) {
@@ -136,30 +137,41 @@ public class DispatcherThread implements Runnable {
 			// trace
 			tracer.TraceToConsole(String.format("Service Name is: %s\nFunction Name is: %s", uriData.ServiceName, uriData.FunctionName));		
 			
-			// this is the response from the service
-			String content = null;
-			
 			if (uriData.ServiceName == null)
 			{
+				// 302 to the get_main_page
 				response = new HttpResponseParser(HttpResponseCode.MOVED_PERMANENTLY);
 				response.SetHttpVersion(request.GetHttpVersion());
 				response.AddHeader(new HttpHeader("Location", "/commands_service/get_main_page"));
 			}
 			else
 			{
+				// this is the response from the service
+				byte[] content = null;
+				String scontent = null;
+				HttpHeader imageHeader = null;
+				
 				String[] params = null;
 				params = request.GetQueryStringParams(HttpQueryStringType.BOTH).values().toArray(new String[0]);
 
 				switch(HttpServices.valueOf(uriData.ServiceName))
 				{
 				case commands_service:
-					content = CommandsService.get_instance().callFunction(CommandsService.Functions.valueOf(uriData.FunctionName), params);
+					scontent = CommandsService.get_instance().callFunction(CommandsService.Functions.valueOf(uriData.FunctionName), params);
+					content = scontent.getBytes();
 					break;
 				case commnads_service_proxy:
 					CommandsServiceProxy proxy = new CommandsServiceProxy();
 					proxy.DestinationIP = "127.0.0.1";
 					proxy.DestinationPort = 10000;
-					content = proxy.echo(params[0]);
+					scontent = proxy.echo(params[0]);
+					content = scontent.getBytes();
+					break;
+				case images:
+					content = ImagesService.get_instance().GetImage(uriData.FunctionName);
+					String ext = uriData.FunctionName.split("[.]")[1];
+					imageHeader = new HttpHeader("Content-Type", String.format("image/%s", ext));
+					break;
 					default:
 						// 404 (cannot happen...)
 				}
@@ -167,7 +179,11 @@ public class DispatcherThread implements Runnable {
 				// everything worked if we got here
 				response = new HttpResponseParser(HttpResponseCode.OK);
 				response.SetHttpVersion(request.GetHttpVersion());
-				response.SetContent(content.getBytes());
+				response.SetContent(content);
+				if (imageHeader != null)
+				{
+					response.AddHeader(imageHeader);
+				}
 				response.AddHeader(new HttpHeader("Content-Length", String.valueOf(response.GetContentSize())));
 				response.AddHeader(new HttpHeader("Server", m_ServerName));
 			}

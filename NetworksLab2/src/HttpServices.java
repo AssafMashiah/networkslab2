@@ -7,6 +7,7 @@
 public enum HttpServices {
 
 	commands_service,
-	commnads_service_proxy
+	commnads_service_proxy,
+	images
 	
 }

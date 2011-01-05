@@ -179,6 +179,16 @@ public class HttpResponseParser extends HttpParser {
 	@Override
 	public String toString() {
 		
+		return toString(false);
+	}
+	
+	/**
+	 * 
+	 * @param onlyHeaders if true, will return only the headers, if false, will return the headers with the data (ASCII encoded to string)
+	 * @return The response in human readable format* (some humans)
+	 */
+	public String toString(boolean onlyHeaders)
+	{
 		StringBuilder sb = new StringBuilder();
 		
 		// output the status line
@@ -192,7 +202,7 @@ public class HttpResponseParser extends HttpParser {
 		sb.append(HeaderString());
 		sb.append(CRLF);
 		
-		if (GetContentSize() > 0)
+		if (!onlyHeaders)
 		{
 			sb.append(new String(GetContent()));
 		}

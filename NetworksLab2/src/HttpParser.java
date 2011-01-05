@@ -54,12 +54,19 @@ public abstract class HttpParser
 	}
 	
 	/**
-	 * 
+	 * If not content, an empty byte array is returned
 	 * @return The content of the current parser or null if empty
 	 */
 	public byte[] GetContent()
 	{
-		return m_Content;
+		if (GetContentSize() > 0)
+		{
+			return m_Content;
+		}
+		else
+		{
+			return new byte[0];
+		}
 	}
 	
 	/**
