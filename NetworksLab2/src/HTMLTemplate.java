@@ -29,8 +29,8 @@ public class HTMLTemplate
         StringBuffer stringBuffer = new StringBuffer();
         for (String s = reader.readLine(); s != null; s = reader.readLine()) 
         {
-                stringBuffer.append(s);
-                stringBuffer.append('\n');
+        	stringBuffer.append(s);
+            stringBuffer.append('\n');
         }
         
         m_html = stringBuffer.toString();
