@@ -16,7 +16,11 @@ import java.util.Date;
 public class Tracer {
 
 	// Same comment from Starter about ifdef 
-	private static final boolean TRACE_ON = true;
+	private static final boolean TRACE_ON = true; 
+	private static final boolean LOG_FILE_ON = true;
+	
+	// Object that will print to the file
+	public TracerFileWriter m_TracerFileWriter;
 	
 	// the name that will be written in the trace messages
 	private String m_Name;
@@ -25,6 +29,10 @@ public class Tracer {
 	private Tracer(String name)
 	{
 		m_Name = name;
+		if(LOG_FILE_ON)
+		{
+			m_TracerFileWriter = TracerFileWriter.get_instance();
+		}
 	}
 	
 	/**
@@ -68,6 +76,12 @@ public class Tracer {
 	{
 		if (TRACE_ON)
 		{
+			if(LOG_FILE_ON)
+			{
+				TracerFileWriter.Write(message, m_Name);
+			}
+			
+			// Regular print
 			System.out.println(String.format("[%s] %s: %s", getTime(), m_Name, message));
 		}
 	}
@@ -86,9 +100,19 @@ public class Tracer {
 			{
 				sb.append(s);
 				sb.append("\r\n");
+				if(LOG_FILE_ON)
+				{
+					TracerFileWriter.Write(s, m_Name);
+				}
 			}
 			
 			this.TraceToConsole(sb.toString());
 		}
+	}
+
+	public void stop()
+	{
+		//Close the output stream
+		TracerFileWriter.Stop();
 	}
 }
