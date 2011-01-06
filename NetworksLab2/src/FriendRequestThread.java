@@ -1,4 +1,5 @@
 
+
 public class FriendRequestThread implements Runnable 
 {
 	private final String EXPECTED_PREFIX = "Be my friend? ";
@@ -36,7 +37,16 @@ public class FriendRequestThread implements Runnable
 			
 			tracer.TraceToConsole(String.format("Start friendship protocol with %s:%s", IPAndPort[0], IPAndPort[1]));
 			
-			// TODO: call bob's proxy for add_me_as_a_friend
+			// call bob's proxy for add_me_as_a_friend
+			FriendServiceProxy proxy = new FriendServiceProxy(IPAndPort[0], Integer.parseInt(IPAndPort[1]));
+			try 
+			{
+				proxy.AddMeAsAFriendRequest(FriendService.get_instance().GetFriendsInOneLine(true));
+			} 
+			catch (Exception e) 
+			{
+				tracer.TraceToConsole("Something bad happened while adding a friend :(");
+			}
 		}
 		else
 		{

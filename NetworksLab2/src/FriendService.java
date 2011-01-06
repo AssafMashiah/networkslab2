@@ -167,14 +167,15 @@ public class FriendService implements IFriendService
 		// Split string on ;
 		String[] tempfriends = friends.split(";");
 		
+		// get the first friend
+		FriendInfo firstOne = new FriendInfo(tempfriends[0]);
+		
 		// builds the new friend list (without the first one)
-		ArrayList<FriendInfo> newFriends = new ArrayList<FriendInfo>();
+		final ArrayList<FriendInfo> newFriends = new ArrayList<FriendInfo>();
 		for (int i = 1; i < tempfriends.length; i++)
 		{
 			newFriends.add(new FriendInfo(tempfriends[i]));
 		}
-		
-		FriendInfo firstOne = new FriendInfo(tempfriends[0]);
 		
 		// we should not be getting an ack from a friend we already have, this is an error
 		if (m_FriendInfoList.contains(firstOne))
@@ -186,9 +187,30 @@ public class FriendService implements IFriendService
 		m_FriendInfoList.add(firstOne);
 
 		// we got an ACK, we need to start adding a new friends (in a new thread)
+		Thread babaGump = new Thread() {
+			
+			@Override
+			public void run() {
+				// Send friend requests to all the rest of the list, if required (via add friend source)
+				for(FriendInfo newFriend : newFriends)
+				{
+					String myFriendList = GetFriendsInOneLine(true);
+					
+					if (!m_FriendInfoList.contains(newFriend) && !m_MyInfo.equals(newFriend))
+					{
+						// proxy call of add friend info to this friend
+						FriendServiceProxy proxy = new FriendServiceProxy(newFriend.IP, newFriend.Port);
+						try {
+							proxy.AddMeAsAFriendRequest(myFriendList);
+						} catch (Exception e) {
+							tracer.TraceToConsole(String.format("Failed to add new friend -> %s\nError was: %s", newFriend, e.toString()));
+						}
+					}
+				}
+			}
+		};
 		
-		
-		// we need to OK the ACK - this happens automatically via the service
+		babaGump.start();
 	}
 	
 	private String GetFriendsListPage() throws IOException 
@@ -304,7 +326,7 @@ public class FriendService implements IFriendService
 //		return retVal;
 //	}
 	
-	private String GetFriendsInOneLine(boolean withMe) 
+	public String GetFriendsInOneLine(boolean withMe) 
 	{
 		StringBuilder sb = new StringBuilder();
 		
@@ -331,8 +353,6 @@ public class FriendService implements IFriendService
 				sb.append(friend);
 			}
 		}
-		
-		
 		
 		return sb.toString();
 	}

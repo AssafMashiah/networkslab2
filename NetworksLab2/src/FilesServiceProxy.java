@@ -1,6 +1,5 @@
 import java.io.IOException;
 import java.net.UnknownHostException;
-import java.util.Random;
 
 public class FilesServiceProxy extends ProxyBase implements IFileService 
 {
