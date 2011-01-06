@@ -174,6 +174,10 @@ public class DispatcherThread implements Runnable {
 				case images:
 					content = ImagesService.get_instance().GetImage(uriData.FunctionName);
 					String ext = uriData.FunctionName.split("[.]")[1];
+					if (ext.equals("ico"))
+					{
+						ext = "x-icon";
+					}
 					imageHeader = new HttpHeader("Content-Type", String.format("image/%s", ext));
 					break;
 					default:
