@@ -200,10 +200,6 @@ public abstract class HttpParser
             offset += numRead;
 	    }
 		
-//		if (in != null) {
-//			in.read(ccontent);
-//		}
-		
 		byte[] bytes = new byte[ccontent.length];
 		
 		for (int i = 0; i < ccontent.length; i++)

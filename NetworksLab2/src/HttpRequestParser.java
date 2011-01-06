@@ -1,3 +1,5 @@
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -181,6 +183,16 @@ public class HttpRequestParser extends HttpParser {
 			
 			String paramKey = param.substring(0, currentParamSeperator);
 			String paramValue = param.substring(currentParamSeperator + 1, param.length());
+			
+			try 
+			{
+				paramValue = URLDecoder.decode(paramValue, "ASCII");
+			} 
+			catch (UnsupportedEncodingException e) 
+			{
+				// will not happen
+				e.printStackTrace();
+			}
 			
 			currentParams.put(paramKey, paramValue);
 			
