@@ -2,7 +2,6 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.Random;
 
-
 public class FilesServiceProxy extends ProxyBase implements IFileService 
 {
 
@@ -26,8 +25,20 @@ public class FilesServiceProxy extends ProxyBase implements IFileService
 		return new String(response.GetContent());
 	}
 	
-	public String DownloadFile(String fileName) throws UnknownHostException, IOException, HttpHeaderParsingException, HttpResponseParsingException, HttpProxyException
+	/**
+	 * This gets the file from the server and serves it to disk
+	 * @param fileName - The name of the file
+	 * @throws UnknownHostException
+	 * @throws IOException
+	 * @throws HttpHeaderParsingException
+	 * @throws HttpResponseParsingException
+	 * @throws HttpProxyException
+	 */
+	public void DownloadFile(String fileName) throws UnknownHostException, IOException, HttpHeaderParsingException, HttpResponseParsingException, HttpProxyException
 	{
+		// Setting the correct ASCII
+		Lab2Utils.URLEncodeString(fileName);
+		
 		HttpRequestParser request = GetRequest(HttpRequestMethod.GET, "/files_service/download_file", fileName);
 		
 		HttpResponseParser response = SendData(request);
@@ -37,12 +48,14 @@ public class FilesServiceProxy extends ProxyBase implements IFileService
 		{
 			throw new HttpProxyException(String.format("Destination reported an error during add_me_as_a_friend: %s", response.GetHttpResponseCode()));
 		}
+		
+		// Decoding the file from Base64
 		byte[] decodedFile = Base64Coder.decode(new String(response.GetContent()));
-		// TODO remove the temp!!
-		String fileNameForSaving = String.format("%stemp\\%s", FilesService.get_instance().GetRootDir(), fileName);
 		
+		// Data on where to save the file
+		String fileNameForSaving = String.format("%s%s", FilesService.get_instance().GetRootDir(), fileName);
+		
+		// The writing of the file
 		Lab2Utils.WriteFile(decodedFile, fileNameForSaving);
-		
-		return new String();
 	}
 }

@@ -4,6 +4,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 
 public class Lab2Utils
 {
@@ -61,5 +64,35 @@ public class Lab2Utils
 				bos.close();
 			}
 		}
+	}
+	
+	public static String URLDecodingString(String in)
+	{
+		String out = null;
+		try 
+		{
+			out = URLDecoder.decode(in, "ASCII");
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			e.printStackTrace();
+		}
+		
+		return out;
+	}
+	
+	public static String URLEncodeString(String in)
+	{
+		String out = null;
+		try
+		{
+			out = URLEncoder.encode(in, "ASCII");
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			e.printStackTrace();
+		}
+		
+		return out;
 	}
 }

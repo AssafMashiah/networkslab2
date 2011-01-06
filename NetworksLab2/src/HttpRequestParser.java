@@ -185,15 +185,7 @@ public class HttpRequestParser extends HttpParser {
 			String paramValue = param.substring(currentParamSeperator + 1, param.length());
 			
 			// handle decoding (in case we got spaces or whatnot
-			try 
-			{
-				paramValue = URLDecoder.decode(paramValue, "ASCII");
-			} 
-			catch (UnsupportedEncodingException e) 
-			{
-				// will not happen
-				e.printStackTrace();
-			}
+			Lab2Utils.URLDecodingString(paramValue);
 			
 			currentParams.put(paramKey, paramValue);
 			
@@ -290,5 +282,4 @@ public class HttpRequestParser extends HttpParser {
 		
 		return sb.toString();
 	}
-	
 }

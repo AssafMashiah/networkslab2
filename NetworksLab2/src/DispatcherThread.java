@@ -290,8 +290,7 @@ public class DispatcherThread implements Runnable {
 		HttpResponseParser generatedResponse = new HttpResponseParser(code);
 
 		generatedResponse.AddHeader(new HttpHeader("Content-Length", "0"));
-		generatedResponse.AddHeader(new HttpHeader("Server",
-				m_ServerName));
+		generatedResponse.AddHeader(new HttpHeader("Server", m_ServerName));
 		generatedResponse.SetHttpVersion(version);
 
 		return generatedResponse;
@@ -351,7 +350,6 @@ public class DispatcherThread implements Runnable {
 		
 		// we want to ensure the content is preserved with its encoding (which should be ASCII, but may not be?)
 		byte[] content = new String(ccontent).getBytes();
-		
 
 		return content;
 	}
