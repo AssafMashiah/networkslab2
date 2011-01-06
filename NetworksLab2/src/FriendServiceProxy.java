@@ -11,14 +11,14 @@ public class FriendServiceProxy extends ProxyBase implements IFriendService
 
 	public String AddMeAsAFriendRequest(String friends) throws UnknownHostException, IOException, HttpHeaderParsingException, HttpResponseParsingException, HttpProxyException
 	{
-		HttpRequestParser request = GetRequest(HttpRequestMethod.GET, "/friends_server/add_me_as_a_friend", friends);
+		HttpRequestParser request = GetRequest(HttpRequestMethod.GET, "/friends_service/add_me_as_friend_request", friends);
 		
 		HttpResponseParser response = SendData(request);
 		
 		// validate response
 		if (!response.GetHttpResponseCodeObject().equals(HttpResponseCode.OK))
 		{
-			throw new HttpProxyException(String.format("Destination reported an error during add_me_as_a_friend: %s", response.GetHttpResponseCode()));
+			throw new HttpProxyException(String.format("Destination reported an error during add_me_as_friend_request: %s", response.GetHttpResponseCode()));
 		}
 		
 		return new String(response.GetContent());
@@ -26,7 +26,7 @@ public class FriendServiceProxy extends ProxyBase implements IFriendService
 
 	public String AckFriendRequest(String friends) throws UnknownHostException, IOException, HttpHeaderParsingException, HttpResponseParsingException, HttpProxyException
 	{
-		HttpRequestParser request = GetRequest(HttpRequestMethod.GET, "/friends_server/ack_friend_request", friends);
+		HttpRequestParser request = GetRequest(HttpRequestMethod.GET, "/friends_service/ack_friend_request", friends);
 		
 		HttpResponseParser response = SendData(request);
 		

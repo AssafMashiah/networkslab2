@@ -34,7 +34,7 @@ public class FriendInfo {
 		
 		FriendInfo other = (FriendInfo) obj;
 		
-		return (this.NickName == other.NickName && this.IP == other.IP && this.Port == other.Port);
+		return (this.NickName.equals(other.NickName) && this.IP.equals(other.IP) && this.Port == other.Port);
 	}
 	
 	public FriendInfo(String nickname, String IP, int port)

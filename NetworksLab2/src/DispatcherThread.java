@@ -169,6 +169,21 @@ public class DispatcherThread implements Runnable {
 						response = HttpResponseParser.GetRedirectResponse(location, request.GetHttpVersion());
 					}
 					break;
+				case friends_service:
+					FriendService.Functions funcName = FriendService.Functions.valueOf(uriData.FunctionName);
+					
+					scontent = FriendService.get_instance().callFunction(funcName, params);
+					content = scontent.getBytes();
+
+					// if we want to reload the friends_list_page
+					if (funcName.equals(FriendService.Functions.look_for_friends) ||
+						funcName.equals(FriendService.Functions.add_friend_source) ||
+						funcName.equals(FriendService.Functions.remove_friend))
+					{
+						String location = "/friends_service/get_friends_list_page";
+						response = HttpResponseParser.GetRedirectResponse(location, request.GetHttpVersion());
+					}
+					break;
 				case images:
 					content = ImagesService.get_instance().GetImage(uriData.FunctionName);
 					String ext = uriData.FunctionName.split("[.]")[1];
@@ -213,6 +228,10 @@ public class DispatcherThread implements Runnable {
 //			tracer.TraceToConsole("Proxy has encountered an error from server: " + e.getMessage());
 //			response = generateHttpErrorResponse(HttpResponseCode.INTERNAL_SERVER_ERROR, request.GetHttpVersion());
 //		}
+		catch (IOException e) {
+			tracer.TraceToConsole("server has encountered a 500 error");
+			response = generateHttpErrorResponse(HttpResponseCode.INTERNAL_SERVER_ERROR, request.GetHttpVersion());
+		}
 		catch (Exception e)
 		{
 			// we catch a general exception as everything we do is logic processing on the request data

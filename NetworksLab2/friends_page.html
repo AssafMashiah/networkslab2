@@ -1,0 +1,63 @@
+<html>
+<head>
+	<title>Networks Lab 2 File Friends Page</title>
+	<!-- IE -->
+	<link rel="shortcut icon" href="/images/favicon.ico" />
+	<!-- the rest -->
+	<link rel="icon" type="image/x-icon" href="/images/recycle2.ico" />
+</head>
+<script type="text/javascript">
+<!--//
+function doRemoveAction(ip, port) 
+{
+    document.friendsForm.action = "/friends_service/remove_friend?p1=" + ip + "&p2=" + port;
+    document.friendsForm.submit();
+}
+
+function doFilesPage(ip, port)
+{
+	document.friendsForm.action = "/files_service/get_file_sharing_page?p1=" + ip + "&p2=" + port;
+	document.friendsForm.submit();
+}
+
+function addFriendSource()
+{
+	data = document.getElementById("newfriendipport").value;
+	arr = data.split(":");
+	
+	document.addSource.action = "/friends_service/add_friend_source?p1=" + arr[0] + "&p2=" + arr[1];
+	document.addSource.submit();
+}
+
+//-->
+</script>
+<body>
+	<table width="100%">
+		<tr>
+			<td align="center">
+				<H1>Networks Lab 2!!</H1>
+				<form name="friendsForm" action="" method="post">
+				My friends page!! weeee<br>
+				[###FREINDS_TABLE]
+				</form>
+				<br>
+				<form name="toMyFiles" action="/files_service/get_file_sharing_page?p1=127.0.0.1&p2=[###MY_PORT]" method="post">
+				<input type="submit" value="My shared files"><br>
+				</form>
+				<br>
+					
+				<form name="addSource" action="" method="post">
+				<input type="textbox" id="newfriendipport"> &nbsp;&nbsp;
+				<input type="button" value="Add a friend" onClick='javascript:addFriendSource()'><br>		
+				</form>
+				
+				<form name="lookForFriends" action="/friends_service/look_for_friends" method="post">
+				<input type="submit" value="Look for Friends!">
+				</form>
+				<br>
+				<a href="/commands_service/get_main_page">Back to Main Page</a><br>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

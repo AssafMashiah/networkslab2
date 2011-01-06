@@ -85,7 +85,6 @@ public class CommandsService implements ICommandsService {
 	{
 		tracer.TraceToConsole("GetMainPage() called");
 		HTMLTemplate t = new HTMLTemplate("mainpage.html");
-		t.AddValueToTemplate("SERVER", "http://localhost/");
 		return t.CompileTemplate();
 	}
 }

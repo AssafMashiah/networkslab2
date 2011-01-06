@@ -77,7 +77,7 @@ public class DispatcherServer implements Runnable {
 			
 			// set my info
 			String nickname = m_Configuration.GetValue("nickname");
-			String IP = InetAddress.getLocalHost().getHostName();
+			String IP = InetAddress.getLocalHost().getHostAddress();
 			FriendService.get_instance().SetMyInfo(new FriendInfo(nickname, IP, m_portNumber));
 			FriendService.get_instance().SetDispatcherPort(m_portNumber);
 			

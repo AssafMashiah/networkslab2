@@ -18,6 +18,7 @@ public class FriendService implements IFriendService
 	
 	private FriendService() 
 	{
+		m_FriendInfoList = new ArrayList<FriendInfo>();
 	}
 
 	public static synchronized FriendService get_instance() 
@@ -69,7 +70,7 @@ public class FriendService implements IFriendService
 				AckFriendRequest(params[0]);
 				break;
 			case add_friend_source:
-				AddFriendSource(params[0], Integer.parseInt(params[1]));
+				AddFriendSource(params[1], Integer.parseInt(params[0]));
 				break;
 			case add_me_as_friend_request:
 				AddMeAsFriendRequest(params[0]);
@@ -77,12 +78,14 @@ public class FriendService implements IFriendService
 			case get_friends:
 				retVal.append(GetFriendsInOneLine(true));
 				break;
-			case get_Friends_list_page:
+			case get_friends_list_page:
+				retVal.append(GetFriendsListPage());
 				break;
 			case look_for_friends:
 				LookForFriends();
 				break;
 			case remove_friend:
+				RemoveFriend(params[1], Integer.parseInt(params[0]));
 				break;
 			default:
 				// this is a 404 error, it should not happen (right now no code
@@ -188,23 +191,46 @@ public class FriendService implements IFriendService
 		// we need to OK the ACK - this happens automatically via the service
 	}
 	
-	private String GetFriendsListPage() 
+	private String GetFriendsListPage() throws IOException 
 	{
 		tracer.TraceToConsole("Genrating the friends list page");
 		
-		// need to load the template
+		StringBuilder sb = new StringBuilder();
 		
-		// iterate and build a friend row for each friend
+
+		if (m_FriendInfoList.size() == 0)
+		{
+			tracer.TraceToConsole("no friends!!");
+			sb.append("You have no friends :(<br>Try the 'look for friends' maybe you will get lucky!!");
+		}
+		else
+		{
+			tracer.TraceToConsole("found friends!!");
+			sb.append("<table>");
+			sb.append("<tr><th>Nickname</th><th>IP</th><th>Port#</th><th>Remove?</th><th>Get Files?</th></tr>\n");
+			// iterate and build a friend row for each friend
+			for (FriendInfo friend : m_FriendInfoList)
+			{
+				tracer.TraceToConsole("Processing friend: " + friend.toString());
+				sb.append(String.format("<tr><td>%s</td><td>%s</td><td>%d</td>\n<td>", friend.NickName, friend.IP, friend.Port));
+				String userIpPort = String.format("\"%s\", \"%d\"", friend.IP, friend.Port);
+				sb.append("<input type=\"button\" value=\"Remove Friend\" onClick='doRemoveAction(" + userIpPort + ")'></td>\n");
+				sb.append("<td><input type=\"button\" value=\"Go To Files Page\" onClick='doFilesPage(" + userIpPort + ")'></td></tr>\n");
+			}
+			
+			sb.append("</table>");
+		}
 		
 		// replace place holders in template
-		
-		// compile template
+		HTMLTemplate t = new HTMLTemplate("friends_page.html");
+		t.AddValueToTemplate("FREINDS_TABLE", sb.toString());
+		t.AddValueToTemplate("MY_PORT", String.valueOf(m_DispatcherPort));
 		
 		tracer.TraceToConsole("Friend list page was generated!");
-		return null;
+		return t.CompileTemplate();
 	}
 
-	public String AddFriendSource(String friendIP, int friendPort) 
+	private void AddFriendSource(String friendIP, int friendPort) 
 	{
 		String friendsList = GetFriendsInOneLine(true);
 		
@@ -218,8 +244,6 @@ public class FriendService implements IFriendService
 		{
 			tracer.TraceToConsole("failed to add friend source");
 		}
-		
-		return null;
 	}
 
 	private void RemoveFriend(FriendInfo friend) 
@@ -229,14 +253,15 @@ public class FriendService implements IFriendService
 	
 	public void RemoveFriend(String IP, int port) 
 	{
-		for(FriendInfo info : m_FriendInfoList)
+		for(int i = 0; i < m_FriendInfoList.size(); i++)
 		{
-			if(info.IP.equals(IP) && info.Port == port)
+			if(m_FriendInfoList.get(i).IP.equals(IP) && m_FriendInfoList.get(i).Port == port)
 			{
-				tracer.TraceToConsole(String.format("Friend %s was removed", info.NickName));
-				m_FriendInfoList.remove(info);
+				m_FriendInfoList.remove(i);
 			}
 		}
+		
+		tracer.TraceToConsole(String.format("Friend %s:%d was removed", IP, port));
 	}
 
 	public void LookForFriends() throws IOException 
@@ -297,15 +322,17 @@ public class FriendService implements IFriendService
 		if (m_FriendInfoList.size() > 0)
 		{
 			sb.append(m_FriendInfoList.get(0).toString());
+			
+			// append rest of them with ';' delim
+			for(int i = 1 ; i < m_FriendInfoList.size() ; i++)
+			{
+				sb.append(";");
+				String friend = m_FriendInfoList.get(i).toString();
+				sb.append(friend);
+			}
 		}
 		
-		// append rest of them with ';' delim
-		for(int i = 1 ; i < m_FriendInfoList.size() ; i++)
-		{
-			sb.append(";");
-			String friend = m_FriendInfoList.get(i).toString();
-			sb.append(friend);
-		}
+		
 		
 		return sb.toString();
 	}
