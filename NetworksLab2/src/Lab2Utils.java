@@ -1,5 +1,7 @@
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -32,5 +34,32 @@ public class Lab2Utils
         // Close the input stream and return bytes
         is.close();
         return bytes;
+	}
+	
+	public static void WriteFile(byte[] data, String fileName) throws IOException
+	{
+		BufferedOutputStream bos = null;
+ 
+		try
+		{
+			//create an object of FileOutputStream
+			FileOutputStream fos = new FileOutputStream(new File(fileName));
+ 
+			//create an object of BufferedOutputStream
+			bos = new BufferedOutputStream(fos);
+ 
+			bos.write(data);
+		}
+		finally
+		{
+			if(bos != null)
+			{
+				//flush the BufferedOutputStream
+				bos.flush();
+ 
+				//close the BufferedOutputStream
+				bos.close();
+			}
+		}
 	}
 }

@@ -24,7 +24,19 @@ public class FilesService implements IFileService
 	
 	public void SetRootDir(String dir)
 	{
-		m_RootDir = dir;
+		if (dir.endsWith("\\"))
+		{
+			m_RootDir = dir;
+		}
+		else
+		{
+			m_RootDir = dir + "\\";
+		}
+	}
+	
+	public String GetRootDir()
+	{
+		return m_RootDir;
 	}
 	
 	/**
@@ -48,6 +60,9 @@ public class FilesService implements IFileService
 				break;
 			case download_file:
 				retVal.append(downloadFile(params[0]));
+				break;
+			case download_file_from:
+				downloadFileRemotly(params[2], params[1], Integer.parseInt(params[0]));
 				break;
 			case get_shared_files:
 				retVal.append(getSharedFiles());
@@ -100,9 +115,9 @@ public class FilesService implements IFileService
 				sb.append("<tr><td>");
 				sb.append(s);
 				sb.append("</td>");
-				sb.append("<td><input type=button value=\"Download File\" onClick=\"javascript:DoDownload(");
+				sb.append("<td><input type=button value=\"Download File\" onClick='javascript:doDownloadAction(\"");
 				sb.append(s);
-				sb.append(")\"></td></tr>");
+				sb.append("\")'></td></tr>");
 			}
 			sb.append("</table>");
 		}
@@ -114,13 +129,28 @@ public class FilesService implements IFileService
 		return t.CompileTemplate();
 	}
 	
+	private void downloadFileRemotly(String fileName, String targetIP, int targetPort)
+	{
+		FilesServiceProxy proxy = new FilesServiceProxy(targetIP, targetPort);
+		try
+		{
+			proxy.DownloadFile(fileName);
+		}
+		catch (Exception e)
+		{
+			// proxy failed, remove friend
+			FriendService.get_instance().RemoveFriend(targetIP, targetPort);
+		}
+	}
+	
 	private String downloadFile(String fileName) throws IOException
 	{
 		//read file
 		byte[] bytes = Lab2Utils.ReadFile(m_RootDir + fileName);
 		
 		// base64 it
-		String basedFile = Base64.encodeToString(bytes, false);
+		//String basedFile = Base64.encodeToString(bytes, false);
+		String basedFile = new String(Base64Coder.encode(bytes));
 		
 		return basedFile;
 	}
@@ -128,7 +158,7 @@ public class FilesService implements IFileService
 	private String getSharedFiles()
 	{
 		File folder = new File(m_RootDir);
-	    // This filter only returns directories
+	    // This filter only returns files
 	    FileFilter fileFilter = new FileFilter() {
 	        public boolean accept(File file) {
 	            return file.isFile();

@@ -128,7 +128,7 @@ public class DispatcherThread implements Runnable {
 	 */
 	private HttpResponseParser generateNormalResponse(HttpRequestParser request)
 	{
-		HttpResponseParser response;
+		HttpResponseParser response = null;
 		
 		try
 		{
@@ -139,10 +139,7 @@ public class DispatcherThread implements Runnable {
 			
 			if (uriData.ServiceName == null)
 			{
-				// 302 to the get_main_page
-				response = new HttpResponseParser(HttpResponseCode.MOVED_PERMANENTLY);
-				response.SetHttpVersion(request.GetHttpVersion());
-				response.AddHeader(new HttpHeader("Location", "/commands_service/get_main_page"));
+				response = HttpResponseParser.GetRedirectResponse("/commands_service/get_main_page", request.GetHttpVersion());
 			}
 			else
 			{
@@ -160,16 +157,17 @@ public class DispatcherThread implements Runnable {
 					scontent = CommandsService.get_instance().callFunction(CommandsService.Functions.valueOf(uriData.FunctionName), params);
 					content = scontent.getBytes();
 					break;
-				case commnads_service_proxy:
-					CommandsServiceProxy proxy = new CommandsServiceProxy();
-					proxy.DestinationIP = "127.0.0.1";
-					proxy.DestinationPort = 10000;
-					scontent = proxy.echo(params[0]);
-					content = scontent.getBytes();
-					break;
 				case files_service:
+					params = request.GetQueryStringParams(HttpQueryStringType.GET).values().toArray(new String[0]);
 					scontent = FilesService.get_instance().callFunction(FilesService.Functions.valueOf(uriData.FunctionName), params);
 					content = scontent.getBytes();
+					
+					// if this was a remote download request
+					if (FilesService.Functions.valueOf(uriData.FunctionName).equals(IFileService.Functions.download_file_from))
+					{
+						String location = String.format("/files_service/get_file_sharing_page?p1=%s&p2=%s", params[1], params[0]);
+						response = HttpResponseParser.GetRedirectResponse(location, request.GetHttpVersion());
+					}
 					break;
 				case images:
 					content = ImagesService.get_instance().GetImage(uriData.FunctionName);
@@ -184,16 +182,19 @@ public class DispatcherThread implements Runnable {
 						// 404 (cannot happen...)
 				}
 				
-				// everything worked if we got here
-				response = new HttpResponseParser(HttpResponseCode.OK);
-				response.SetHttpVersion(request.GetHttpVersion());
-				response.SetContent(content);
-				if (imageHeader != null)
+				// everything worked if we got here (and we have not decided to go sompelace else yet)
+				if (response == null)
 				{
-					response.AddHeader(imageHeader);
+					response = new HttpResponseParser(HttpResponseCode.OK);
+					response.SetHttpVersion(request.GetHttpVersion());
+					response.SetContent(content);
+					if (imageHeader != null)
+					{
+						response.AddHeader(imageHeader);
+					}
+					response.AddHeader(new HttpHeader("Content-Length", String.valueOf(response.GetContentSize())));
+					response.AddHeader(new HttpHeader("Server", m_ServerName));
 				}
-				response.AddHeader(new HttpHeader("Content-Length", String.valueOf(response.GetContentSize())));
-				response.AddHeader(new HttpHeader("Server", m_ServerName));
 			}
 			
 		}
@@ -207,11 +208,11 @@ public class DispatcherThread implements Runnable {
 			tracer.TraceToConsole("server has encountered a 500 error");
 			response = generateHttpErrorResponse(HttpResponseCode.INTERNAL_SERVER_ERROR, request.GetHttpVersion());
 		}
-		catch (HttpProxyException e)
-		{
-			tracer.TraceToConsole("Proxy has encountered an error from server: " + e.getMessage());
-			response = generateHttpErrorResponse(HttpResponseCode.INTERNAL_SERVER_ERROR, request.GetHttpVersion());
-		}
+//		catch (HttpProxyException e)
+//		{
+//			tracer.TraceToConsole("Proxy has encountered an error from server: " + e.getMessage());
+//			response = generateHttpErrorResponse(HttpResponseCode.INTERNAL_SERVER_ERROR, request.GetHttpVersion());
+//		}
 		catch (Exception e)
 		{
 			// we catch a general exception as everything we do is logic processing on the request data

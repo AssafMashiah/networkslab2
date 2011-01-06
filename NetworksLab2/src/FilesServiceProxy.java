@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.Random;
 
 
 public class FilesServiceProxy extends ProxyBase implements IFileService 
@@ -36,7 +37,12 @@ public class FilesServiceProxy extends ProxyBase implements IFileService
 		{
 			throw new HttpProxyException(String.format("Destination reported an error during add_me_as_a_friend: %s", response.GetHttpResponseCode()));
 		}
+		byte[] decodedFile = Base64Coder.decode(new String(response.GetContent()));
+		// TODO remove the temp!!
+		String fileNameForSaving = String.format("%stemp\\%s", FilesService.get_instance().GetRootDir(), fileName);
 		
-		return new String(response.GetContent());
+		Lab2Utils.WriteFile(decodedFile, fileNameForSaving);
+		
+		return new String();
 	}
 }

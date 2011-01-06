@@ -96,6 +96,16 @@ public class HttpResponseParser extends HttpParser {
 		}
 	}
 	
+	public static HttpResponseParser GetRedirectResponse(String location, HttpVersion version)
+	{
+		// 302 to the get_main_page
+		HttpResponseParser response = new HttpResponseParser(HttpResponseCode.MOVED_PERMANENTLY);
+		response.SetHttpVersion(version);
+		response.AddHeader(new HttpHeader("Location", location));
+		
+		return response;
+	}
+	
 	/**
 	 * Gets the response code object
 	 * @return The response code object!

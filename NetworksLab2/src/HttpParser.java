@@ -192,13 +192,27 @@ public abstract class HttpParser
 			throws IOException {
 		char[] ccontent = new char[contentLength];
 
-		// we know exactly how much to read now
-		if (in != null) {
-			in.read(ccontent);
+        int offset = 0;
+        int numRead = 0;
+		while (offset < ccontent.length
+	               && (numRead=in.read(ccontent, offset, ccontent.length-offset)) >= 0) 
+		{
+            offset += numRead;
+	    }
+		
+//		if (in != null) {
+//			in.read(ccontent);
+//		}
+		
+		byte[] bytes = new byte[ccontent.length];
+		
+		for (int i = 0; i < ccontent.length; i++)
+		{
+			bytes[i] = (byte)ccontent[i];
 		}
 		
 		// we want to ensure the content is preserved with its encoding (which should be ASCII, but may not be?)
-		SetContent(new String(ccontent).getBytes());
+		SetContent(bytes);
 	}
 
 	/**
