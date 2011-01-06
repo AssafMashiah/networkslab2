@@ -13,6 +13,17 @@ public abstract class ProxyBase
 	// used for trace messages
 	private static final Tracer tracer = Tracer.getTracerForThisClass();
 	
+	public ProxyBase()
+	{
+		
+	}
+	
+	public ProxyBase(String dest, int port)
+	{
+		this.DestinationIP = dest;
+		this.DestinationPort = port;
+	}
+	
 	/**
 	 * Gets a request object for this parser (HTTP Version 1.0)
 	 * @param method Request Method

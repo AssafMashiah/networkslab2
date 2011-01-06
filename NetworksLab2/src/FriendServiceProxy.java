@@ -1,19 +1,14 @@
 import java.io.IOException;
 import java.net.UnknownHostException;
 
-public class FriendServiceProxy extends ProxyBase implements IFriendService{
+public class FriendServiceProxy extends ProxyBase implements IFriendService
+{
 
-	public FriendServiceProxy()
+	public FriendServiceProxy(String friendIP, int friendPort) 
 	{
-		
+		super(friendIP, friendPort);
 	}
-	
-	public FriendServiceProxy(String dest, int port)
-	{
-		this.DestinationIP = dest;
-		this.DestinationPort = port;
-	}
-	
+
 	public String AddMeAsAFriendRequest(String friends) throws UnknownHostException, IOException, HttpHeaderParsingException, HttpResponseParsingException, HttpProxyException
 	{
 		HttpRequestParser request = GetRequest(HttpRequestMethod.GET, "/friends_server/add_me_as_a_friend", friends);
