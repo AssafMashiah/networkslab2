@@ -12,8 +12,8 @@ public class TracerFileWriter
 {
 	private final static String DATE_FORMAT_NOW = "yyyy-MM-dd HH:mm:ss";
 	
-	private static FileOutputStream m_fstream;
-	private static String LOG_LOCATION = "c:\\Server.log";
+	private FileOutputStream m_fstream;
+	private String LOG_LOCATION = "c:\\Server.log";
 	
 	// Make this a shared resource to all classes that use the file
 	private static TracerFileWriter m_Instance = null;
@@ -26,16 +26,6 @@ public class TracerFileWriter
 	{
 		if (m_Instance == null) 
 		{
-			try
-			{
-				// Create file 
-				m_fstream = new FileOutputStream(LOG_LOCATION,true);
-			}
-			catch (Exception e)
-			{
-				//Catch exception if any
-		    	System.err.println("Error: " + e.getMessage());
-			}
 			m_Instance = new TracerFileWriter();
 		}
 
@@ -43,11 +33,28 @@ public class TracerFileWriter
 	}
 	
 	/**
+	 * Creates the file that will be the log file of the server
+	 */
+	public void Initialize()
+	{
+		try
+		{
+			// Create file 
+			m_fstream = new FileOutputStream(LOG_LOCATION,true);
+		}
+		catch (Exception e)
+		{
+			//Catch exception if any
+	    	System.err.println("Error: " + e.getMessage());
+		}
+	}
+	
+	/**
 	 * Writing the data to a file
 	 * @param message - the massage to add
 	 * @param name - class the massage came from
 	 */
-	public static void Write(String message, String name)
+	public void Write(String message, String name)
 	{
 		try 
 	   	{
@@ -74,7 +81,7 @@ public class TracerFileWriter
 	/**
 	 * Stops the file - closing it.
 	 */
-	public static void Stop()
+	public void Stop()
 	{
 		try
 		{

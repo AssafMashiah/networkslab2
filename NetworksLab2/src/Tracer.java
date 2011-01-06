@@ -32,6 +32,7 @@ public class Tracer {
 		if(LOG_FILE_ON)
 		{
 			m_TracerFileWriter = TracerFileWriter.get_instance();
+			m_TracerFileWriter.Initialize();
 		}
 	}
 	
@@ -78,7 +79,7 @@ public class Tracer {
 		{
 			if(LOG_FILE_ON)
 			{
-				TracerFileWriter.Write(message, m_Name);
+				m_TracerFileWriter.Write(message, m_Name);
 			}
 			
 			// Regular print
@@ -102,7 +103,7 @@ public class Tracer {
 				sb.append("\r\n");
 				if(LOG_FILE_ON)
 				{
-					TracerFileWriter.Write(s, m_Name);
+					m_TracerFileWriter.Write(s, m_Name);
 				}
 			}
 			
@@ -113,6 +114,6 @@ public class Tracer {
 	public void stop()
 	{
 		//Close the output stream
-		TracerFileWriter.Stop();
+		m_TracerFileWriter.Stop();
 	}
 }
