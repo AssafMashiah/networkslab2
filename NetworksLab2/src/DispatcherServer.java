@@ -80,6 +80,9 @@ public class DispatcherServer implements Runnable {
 			String IP = InetAddress.getLocalHost().getHostName();
 			FriendService.get_instance().SetMyInfo(new FriendInfo(nickname, IP, m_portNumber));
 			FriendService.get_instance().SetDispatcherPort(m_portNumber);
+			
+			// set p2p root dir
+			FilesService.get_instance().SetRootDir(m_Configuration.GetValue("file_sharing_dir"));
 		} catch (Exception e) {
 			String errMessage = String.format(
 					"Error loading Configuration from %s!", configFile);

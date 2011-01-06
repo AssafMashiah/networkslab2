@@ -28,6 +28,17 @@ public abstract class ProxyBase
 	 * Gets a request object for this parser (HTTP Version 1.0)
 	 * @param method Request Method
 	 * @param uri The resource required
+	 * @return 
+	 */
+	protected HttpRequestParser GetRequest(HttpRequestMethod method, String uri)
+	{
+		return GetRequest(method, uri, HttpVersion.One, new String[] {});
+	}
+	
+	/**
+	 * Gets a request object for this parser (HTTP Version 1.0)
+	 * @param method Request Method
+	 * @param uri The resource required
 	 * @param param A single param
 	 * @return 
 	 */
@@ -69,14 +80,14 @@ public abstract class ProxyBase
 		if (params.length > 0)
 		{
 			builder.append(String.format("?param1=%s", params[0]));
+		
+			for (int i = 1; i < params.length; i++)
+			{
+				builder.append(String.format("&param%d=%s", i + 1, params[i]));
+			}
 		}
 		
-		for (int i = 1; i < params.length; i++)
-		{
-			builder.append(String.format("&param%d=%s", i + 1, params[i]));
-		}
-		
-		request.SetRequestURI(String.format("/commands_service/echo%s", builder.toString()));
+		request.SetRequestURI(String.format("%s%s", uri, builder.toString()));
 		
 		return request;
 	}

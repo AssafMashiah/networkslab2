@@ -167,6 +167,10 @@ public class DispatcherThread implements Runnable {
 					scontent = proxy.echo(params[0]);
 					content = scontent.getBytes();
 					break;
+				case files_service:
+					scontent = FilesService.get_instance().callFunction(FilesService.Functions.valueOf(uriData.FunctionName), params);
+					content = scontent.getBytes();
+					break;
 				case images:
 					content = ImagesService.get_instance().GetImage(uriData.FunctionName);
 					String ext = uriData.FunctionName.split("[.]")[1];

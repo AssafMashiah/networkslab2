@@ -227,7 +227,7 @@ public class FriendService implements IFriendService
 		m_FriendInfoList.remove(friend);
 	}
 	
-	private void RemoveFriend(String IP, int port) 
+	public void RemoveFriend(String IP, int port) 
 	{
 		for(FriendInfo info : m_FriendInfoList)
 		{
