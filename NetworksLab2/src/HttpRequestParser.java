@@ -184,6 +184,7 @@ public class HttpRequestParser extends HttpParser {
 			String paramKey = param.substring(0, currentParamSeperator);
 			String paramValue = param.substring(currentParamSeperator + 1, param.length());
 			
+			// handle decoding (in case we got spaces or whatnot
 			try 
 			{
 				paramValue = URLDecoder.decode(paramValue, "ASCII");
