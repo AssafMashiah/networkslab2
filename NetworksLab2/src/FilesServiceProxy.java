@@ -37,9 +37,9 @@ public class FilesServiceProxy extends ProxyBase implements IFileService
 	public void DownloadFile(String fileName) throws UnknownHostException, IOException, HttpHeaderParsingException, HttpResponseParsingException, HttpProxyException
 	{
 		// Setting the correct ASCII
-		Lab2Utils.URLEncodeString(fileName);
+		String EncodedfileName = Lab2Utils.URLEncodeString(fileName);
 		
-		HttpRequestParser request = GetRequest(HttpRequestMethod.GET, "/files_service/download_file", fileName);
+		HttpRequestParser request = GetRequest(HttpRequestMethod.GET, "/files_service/download_file", EncodedfileName);
 		
 		HttpResponseParser response = SendData(request);
 		

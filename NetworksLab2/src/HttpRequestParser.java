@@ -185,7 +185,7 @@ public class HttpRequestParser extends HttpParser {
 			String paramValue = param.substring(currentParamSeperator + 1, param.length());
 			
 			// handle decoding (in case we got spaces or whatnot
-			Lab2Utils.URLDecodingString(paramValue);
+			paramValue = Lab2Utils.URLDecodingString(paramValue);
 			
 			currentParams.put(paramKey, paramValue);
 			
