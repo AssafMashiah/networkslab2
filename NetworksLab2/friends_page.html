@@ -5,6 +5,8 @@
 	<link rel="shortcut icon" href="/images/favicon.ico" />
 	<!-- the rest -->
 	<link rel="icon" type="image/x-icon" href="/images/recycle2.ico" />
+	<!-- css :] -->
+	<LINK REL=StyleSheet HREF="/css/lab2.css" TYPE="text/css" />
 </head>
 <script type="text/javascript">
 <!--//
@@ -50,14 +52,18 @@ function addFriendSource()
 				<input type="textbox" id="newfriendipport"> &nbsp;&nbsp;
 				<input type="button" value="Add a friend" onClick='javascript:addFriendSource()'><br>		
 				</form>
-				
+				<div class="centerwrap">
 				<form name="lookForFriends" action="/friends_service/look_for_friends" method="post">
-				<input type="submit" value="Look for Friends!">
+				<a class="button" href="#" onClick="this.blur();document.lookForFriends.submit();"><span>Look for Friends!</span></a>
 				</form>
-				<br>
-				<a href="/commands_service/get_main_page">Back to Main Page</a><br>
+				</div>
+				
+				<div class="clearer"></div>
+
+				<a href="/commands_service/get_main_page">Back to Main Page</a>
 			</td>
 		</tr>
 	</table>
+
 </body>
 </html>

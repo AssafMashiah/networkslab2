@@ -7,6 +7,7 @@
 public enum HttpServices {
 
 	commands_service,
+	css,
 	files_service,
 	friends_service,
 	images

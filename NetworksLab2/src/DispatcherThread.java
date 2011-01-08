@@ -146,7 +146,7 @@ public class DispatcherThread implements Runnable {
 				// this is the response from the service
 				byte[] content = null;
 				String scontent = null;
-				HttpHeader imageHeader = null;
+				HttpHeader contentTypeHeader = null;
 				
 				String[] params = null;
 				params = request.GetQueryStringParams(HttpQueryStringType.BOTH).values().toArray(new String[0]);
@@ -156,6 +156,10 @@ public class DispatcherThread implements Runnable {
 				case commands_service:
 					scontent = CommandsService.get_instance().callFunction(CommandsService.Functions.valueOf(uriData.FunctionName), params);
 					content = scontent.getBytes();
+					break;
+				case css:
+					content = ImagesService.get_instance().GetImage(uriData.FunctionName);
+					contentTypeHeader = new HttpHeader("Content-Type", "text/css");
 					break;
 				case files_service:
 					params = request.GetQueryStringParams(HttpQueryStringType.GET).values().toArray(new String[0]);
@@ -191,7 +195,7 @@ public class DispatcherThread implements Runnable {
 					{
 						ext = "x-icon";
 					}
-					imageHeader = new HttpHeader("Content-Type", String.format("image/%s", ext));
+					contentTypeHeader = new HttpHeader("Content-Type", String.format("image/%s", ext));
 					break;
 					default:
 						// 404 (cannot happen...)
@@ -203,9 +207,9 @@ public class DispatcherThread implements Runnable {
 					response = new HttpResponseParser(HttpResponseCode.OK);
 					response.SetHttpVersion(request.GetHttpVersion());
 					response.SetContent(content);
-					if (imageHeader != null)
+					if (contentTypeHeader != null)
 					{
-						response.AddHeader(imageHeader);
+						response.AddHeader(contentTypeHeader);
 					}
 					response.AddHeader(new HttpHeader("Content-Length", String.valueOf(response.GetContentSize())));
 					response.AddHeader(new HttpHeader("Server", m_ServerName));

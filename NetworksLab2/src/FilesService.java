@@ -109,16 +109,28 @@ public class FilesService implements IFileService
 		}
 		else
 		{
-			sb.append("<table border=1>");
-			for (String s : files)
+			sb.append("<table border=1 id=\"generated\">\n<tr><th>File Name</th><th>Action</th></tr>\n");
+			for (int i = 0; i < files.length; i++)
 			{
-				sb.append("<tr><td>");
-				sb.append(s);
-				sb.append("</td>");
-				sb.append("<td><input type=button value=\"Download File\" onClick='javascript:doDownloadAction(\"");
-				sb.append(s);
-				sb.append("\")'></td></tr>");
+				String alt = "";
+				if (i % 2 == 1)
+				{
+					alt = " class=\"alt\"";
+				}
+				
+				sb.append("<tr");
+				sb.append(alt);
+				sb.append("><td>");
+				sb.append(files[i]);
+				sb.append("</td><td>");
+				String onClick = String.format("doDownloadAction(\"%s\");", files[i]);
+				sb.append(Lab2Utils.GenerateStyledButton("Download File", onClick));
+				//sb.append("<td><input type=button value=\"Download File\" onClick='javascript:doDownloadAction(\"");
+				//sb.append(files[i]);
+				//sb.append("\")'></td></tr>\n");
+				sb.append("</td></tr>\n");
 			}
+
 			sb.append("</table>");
 		}
 		

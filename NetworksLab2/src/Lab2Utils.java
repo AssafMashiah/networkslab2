@@ -10,6 +10,37 @@ import java.net.URLEncoder;
 
 public class Lab2Utils
 {
+	/**
+	 * Generates a cool button
+	 * @param text The text in the button
+	 * @param onClick The on-click action
+	 * @return The button HTML code
+	 */
+	public static String GenerateStyledButton(String text, String onClick)
+	{
+		return GenerateStyledButton(text, onClick, false);
+	}
+	
+	/**
+	 * Generates a cool button which is centered (relative)
+	 * @param text The text in the button
+	 * @param onClick The on-click action
+	 * @param centered should it be centered?
+	 * @return The button HTML code
+	 */
+	public static String GenerateStyledButton(String text, String onClick, boolean centered)
+	{
+		String centDataPerfix = "";
+		String centDataPostfix = "";
+		if (centered)
+		{
+			centDataPerfix = "<div class=\"centerwrap\">";
+			centDataPostfix = "</div>";
+		}
+		
+		return String.format("%s<a class=\"button\" href=\"#\" onClick='this.blur();%s'><span>%s</span></a>%s", centDataPerfix, onClick, text, centDataPostfix);
+	}
+	
 	public static byte[] ReadFile(String fileName) throws IOException
 	{
 		File file = new File(fileName);
