@@ -13,7 +13,7 @@ public class TracerFileWriter
 	private final static String DATE_FORMAT_NOW = "yyyy-MM-dd HH:mm:ss";
 	
 	private FileOutputStream m_fstream;
-	private String LOG_LOCATION = "c:\\Server.log";
+	private String LOG_LOCATION = "Server.log";
 	
 	// Make this a shared resource to all classes that use the file
 	private static TracerFileWriter m_Instance = null;
@@ -56,14 +56,17 @@ public class TracerFileWriter
 	 */
 	public void Write(String message, String name)
 	{
-		try 
-	   	{
-			m_fstream.write(String.format("[%s] %s: %s", getTime(), message, name).getBytes());
-			m_fstream.write("\r\n".getBytes());
-	   	}
-		catch (IOException e) 
+		if (m_fstream != null)
 		{
-			e.printStackTrace();
+			try 
+		   	{
+				m_fstream.write(String.format("[%s] %s: %s", getTime(), message, name).getBytes());
+				m_fstream.write("\r\n".getBytes());
+		   	}
+			catch (IOException e) 
+			{
+				e.printStackTrace();
+			}
 		}
 	}
 	
@@ -85,7 +88,10 @@ public class TracerFileWriter
 	{
 		try
 		{
-			m_fstream.close();
+			if (m_fstream != null)
+			{
+				m_fstream.close();
+			}
 		}
 		catch (IOException e) 
 		{

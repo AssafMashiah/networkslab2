@@ -105,7 +105,6 @@ public class DispatcherServer implements Runnable {
 	public void stop() {
 		this.m_IsStopped = true;
 		tracer.TraceToConsole("Closing server. BYE BYE");
-		tracer.stop();
 		try {
 			if (this.m_Server != null)
 			{
@@ -154,6 +153,7 @@ public class DispatcherServer implements Runnable {
 			} catch (IOException e) {
 				if (isStopped()) {
 					tracer.TraceToConsole("Server Stopped.");
+					tracer.stop();
 					return;
 				}
 				throw new RuntimeException("Error accepting client connection",
