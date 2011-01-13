@@ -6,7 +6,7 @@
 	<!-- the rest -->
 	<link rel="icon" type="image/x-icon" href="/images/recycle2.ico" />
 	<!-- css :] -->
-	<LINK REL=StyleSheet HREF="/css/lab2.css" TYPE="text/css" />
+	<link rel=StyleSheet href="/css/lab2.css" type="text/css" />
 </head>
 <script type="text/javascript">
 <!--//
@@ -37,21 +37,30 @@ function addFriendSource()
 	<table width="100%">
 		<tr>
 			<td align="center">
-				<H1>Networks Lab 2!!</H1>
+				<H1>Friends Page!!</H1>
 				<form name="friendsForm" action="" method="post">
 				My friends page!! weeee<br>
 				[###FREINDS_TABLE]
 				</form>
 				<br>
-				<form name="toMyFiles" action="/files_service/get_file_sharing_page?p1=127.0.0.1&p2=[###MY_PORT]" method="post">
-				<input type="submit" value="My shared files"><br>
-				</form>
-				<br>
-					
+				<div class="centerwrap">
+					<a class="button" href="/files_service/get_file_sharing_page?p1=127.0.0.1&p2=[###MY_PORT]" onClick="this.blur();"><span>My shared files</span></a>
+				</div>
+				<div class="clearer"></div>
+				
 				<form name="addSource" action="" method="post">
-				<input type="textbox" id="newfriendipport"> &nbsp;&nbsp;
-				<input type="button" value="Add a friend" onClick='javascript:addFriendSource()'><br>		
+					<table>
+						<tr>
+							<td>
+								<input type="textbox" id="newfriendipport"> &nbsp;&nbsp;
+							</td>
+							<td>
+								<a class="button" href="#" onClick="this.blur();addFriendSource();"><span>Add a friend!</span></a>
+							</td>
+						</tr>
+					</table>
 				</form>
+
 				<div class="centerwrap">
 				<form name="lookForFriends" action="/friends_service/look_for_friends" method="post">
 				<a class="button" href="#" onClick="this.blur();document.lookForFriends.submit();"><span>Look for Friends!</span></a>
@@ -64,6 +73,5 @@ function addFriendSource()
 			</td>
 		</tr>
 	</table>
-
 </body>
 </html>
