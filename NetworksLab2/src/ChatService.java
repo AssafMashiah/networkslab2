@@ -88,7 +88,7 @@ public class ChatService implements IChatService
 			sb.append("</div>");
 			sb.append("<div class=\"chatdata\">&nbsp;");
 			sb.append(data.Message);
-			sb.append("</div><br>\n");
+			sb.append("</div><div class=\"padder\"></div><br>\n");
 		}
 		
 		return sb.toString();

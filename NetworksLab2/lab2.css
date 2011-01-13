@@ -36,6 +36,11 @@ div.chatdata
 	float: left;
 }
 
+div.padder
+{
+	padding-top: 2px;
+}
+
 input.messagebox:focus 
 {
     background-color: #63ADD0;
