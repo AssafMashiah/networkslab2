@@ -157,7 +157,34 @@ public class DispatcherThread implements Runnable {
 					scontent = CommandsService.get_instance().callFunction(CommandsService.Functions.valueOf(uriData.FunctionName), params);
 					content = scontent.getBytes();
 					break;
+				case chat_service:
+					// Add the IP address of the request to the string param
+					tracer.TraceToConsole("Creating Chat service params");
+					String[] chatParams = new String[2];
+					if (params.length == 0)
+					{
+						chatParams = params;
+					}
+					else
+					{
+						chatParams[0] = params[0];
+						chatParams[1] = m_ClientSocket.getInetAddress().getHostAddress();
+					}
+					
+					ChatService.Functions chatFuncName = ChatService.Functions.valueOf(uriData.FunctionName);
+					
+					scontent = ChatService.get_instance().callFunction(chatFuncName, chatParams);
+					content = scontent.getBytes();
+					
+					if (chatFuncName.equals(ChatService.Functions.send_message))
+					{
+						String location = "/chat_service/get_chat_page";
+						response = HttpResponseParser.GetRedirectResponse(location, request.GetHttpVersion());
+					}
+					break;
 				case css:
+					// using Images service as it will get us the data in the way we want it for css files
+					// we are lazy and did not rename image service to something more generic
 					content = ImagesService.get_instance().GetImage(uriData.FunctionName);
 					contentTypeHeader = new HttpHeader("Content-Type", "text/css");
 					break;
@@ -233,6 +260,11 @@ public class DispatcherThread implements Runnable {
 //			response = generateHttpErrorResponse(HttpResponseCode.INTERNAL_SERVER_ERROR, request.GetHttpVersion());
 //		}
 		catch (IOException e) {
+			tracer.TraceToConsole("server has encountered a 500 error");
+			response = generateHttpErrorResponse(HttpResponseCode.INTERNAL_SERVER_ERROR, request.GetHttpVersion());
+		}
+		catch (ArrayIndexOutOfBoundsException e)
+		{
 			tracer.TraceToConsole("server has encountered a 500 error");
 			response = generateHttpErrorResponse(HttpResponseCode.INTERNAL_SERVER_ERROR, request.GetHttpVersion());
 		}

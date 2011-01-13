@@ -30,21 +30,26 @@ public class FriendService implements IFriendService
 		return m_Instance;
 	}
 	
-	private FriendService(FriendInfo myInfo)
-	{
-		m_MyInfo = new FriendInfo(myInfo);
-		m_FriendInfoList = new ArrayList<FriendInfo>();
-	}
-	
-	private FriendService(String nickname, String IP, int port)
-	{
-		m_MyInfo = new FriendInfo(nickname, IP, port);
-		m_FriendInfoList = new ArrayList<FriendInfo>();
-	}
+//	private FriendService(FriendInfo myInfo)
+//	{
+//		m_MyInfo = new FriendInfo(myInfo);
+//		m_FriendInfoList = new ArrayList<FriendInfo>();
+//	}
+//	
+//	private FriendService(String nickname, String IP, int port)
+//	{
+//		m_MyInfo = new FriendInfo(nickname, IP, port);
+//		m_FriendInfoList = new ArrayList<FriendInfo>();
+//	}
 	
 	public void SetMyInfo(FriendInfo me)
 	{
 		m_MyInfo = new FriendInfo(me);
+	}
+	
+	public FriendInfo GetMyInfo()
+	{
+		return new FriendInfo(m_MyInfo);
 	}
 	
 	public void SetDispatcherPort(int port)
@@ -228,17 +233,35 @@ public class FriendService implements IFriendService
 		else
 		{
 			tracer.TraceToConsole("found friends!!");
-			sb.append("<table>");
+			sb.append("<table id=\"generated\">");
 			sb.append("<tr><th>Nickname</th><th>IP</th><th>Port#</th><th>Remove?</th><th>Get Files?</th></tr>\n");
 			// iterate and build a friend row for each friend
-			for (FriendInfo friend : m_FriendInfoList)
+			for (int i = 0; i < m_FriendInfoList.size(); i++)
 			{
+				FriendInfo friend = m_FriendInfoList.get(i);
+				
+				String alt = "";
+				
+				if (i % 2 == 1)
+				{
+					alt = " class=\"alt\"";
+				}
+				
 				tracer.TraceToConsole("Processing friend: " + friend.toString());
-				sb.append(String.format("<tr><td>%s</td><td>%s</td><td>%d</td>\n<td>", friend.NickName, friend.IP, friend.Port));
+				sb.append(String.format("<tr%s>\n<td>%s</td>\n<td>%s</td>\n<td>%d</td>\n<td>", alt, friend.NickName, friend.IP, friend.Port));
 				String userIpPort = String.format("\"%s\", \"%d\"", friend.IP, friend.Port);
 				sb.append("<input type=\"button\" value=\"Remove Friend\" onClick='doRemoveAction(" + userIpPort + ")'></td>\n");
 				sb.append("<td><input type=\"button\" value=\"Go To Files Page\" onClick='doFilesPage(" + userIpPort + ")'></td></tr>\n");
 			}
+			
+//			for (FriendInfo friend : m_FriendInfoList)
+//			{
+//				tracer.TraceToConsole("Processing friend: " + friend.toString());
+//				sb.append(String.format("<tr><td>%s</td><td>%s</td><td>%d</td>\n<td>", friend.NickName, friend.IP, friend.Port));
+//				String userIpPort = String.format("\"%s\", \"%d\"", friend.IP, friend.Port);
+//				sb.append("<input type=\"button\" value=\"Remove Friend\" onClick='doRemoveAction(" + userIpPort + ")'></td>\n");
+//				sb.append("<td><input type=\"button\" value=\"Go To Files Page\" onClick='doFilesPage(" + userIpPort + ")'></td></tr>\n");
+//			}
 			
 			sb.append("</table>");
 		}
@@ -309,22 +332,10 @@ public class FriendService implements IFriendService
 		socket.send(payloadPacket);
 	}
 
-//	private String[] GetFriends() 
-//	{	
-//		// get the number of known friends
-//		int length = m_FriendInfoList.size();
-//		
-//		// add them to a string array
-//		String[] retVal = new String[length];
-//		
-//		for(int i = 0 ; i < length ; i++)
-//		{
-//			String friend = m_FriendInfoList.get(i).toString();
-//			retVal[i] = friend;
-//		}
-//		
-//		return retVal;
-//	}
+	public FriendInfo[] GetFriends() 
+	{	
+		return m_FriendInfoList.toArray(new FriendInfo[0]);
+	}
 	
 	public String GetFriendsInOneLine(boolean withMe) 
 	{

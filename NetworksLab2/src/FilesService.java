@@ -125,9 +125,6 @@ public class FilesService implements IFileService
 				sb.append("</td><td>");
 				String onClick = String.format("doDownloadAction(\"%s\");", files[i]);
 				sb.append(Lab2Utils.GenerateStyledButton("Download File", onClick));
-				//sb.append("<td><input type=button value=\"Download File\" onClick='javascript:doDownloadAction(\"");
-				//sb.append(files[i]);
-				//sb.append("\")'></td></tr>\n");
 				sb.append("</td></tr>\n");
 			}
 

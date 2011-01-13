@@ -1,0 +1,54 @@
+<html>
+<head>
+	<title>Networks Lab 2 Chat Page</title>
+	<!-- IE -->
+	<link rel="shortcut icon" href="/images/favicon.ico" />
+	<!-- the rest -->
+	<link rel="icon" type="image/x-icon" href="/images/recycle2.ico" />
+	<!-- css :] -->
+	<link rel=StyleSheet href="/css/lab2.css" type="text/css" />
+</head>
+<script type="text/javascript">
+<!--//
+function sendNewMessage() 
+{
+	textInput = document.getElementById("messageText");
+    
+    if (textInput.value != "")
+    {
+    	document.sendMessage.action = "/chat_service/send_message?p1=" + textInput.value; 
+    	document.sendMessage.submit();
+    }
+}
+
+//-->
+</script>
+<body>
+	<H1 align="center">Chat page!!!</H1>
+
+	<div class="centerwrap">
+		<div class="chatArea">
+			[###CHAT_DATA]				
+		</div>
+	</div>
+	<div class="clearer"></div>
+	
+	<form name="sendMessage" action="/chat_service/send_message" method="post">
+		<table align="center">
+			<tr>
+				<td>
+					<input class="messagebox" type="text" id="messageText" size="75"></input>
+				</td>
+				<td>
+					<a class="button" href="#" onClick="this.blur();sendNewMessage();"><span>Send</span></a>
+				</td>
+			</tr>
+		</table>
+	</form>
+	
+	<div class="centerwrap">
+		<a style="left:50%;position:relative;" href="/commands_service/get_main_page">Back to Main Page</a>
+	</div>
+	<div class="clearer"></div>
+</body>
+</html>

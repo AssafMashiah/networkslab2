@@ -7,9 +7,35 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Lab2Utils
 {
+	private final static String DATE_FORMAT_NOW = "yyyy-MM-dd HH:mm:ss";
+	
+	/**
+	 * Get the timestamp with the default format (yyyy-MM-dd HH:mm:ss)
+	 * @return
+	 */
+	public static String GetTimeStamp()
+	{
+		return GetTimeStamp(DATE_FORMAT_NOW);
+	}
+	
+	/**
+	 * Return timestamp with the given format
+	 * @param format The format of the timestamp
+	 * @return
+	 */
+	public static String GetTimeStamp(String format)
+	{
+		DateFormat dateFormat = new SimpleDateFormat(format);
+        Date date = new Date();
+		return dateFormat.format(date);
+	}
+	
 	/**
 	 * Generates a cool button
 	 * @param text The text in the button

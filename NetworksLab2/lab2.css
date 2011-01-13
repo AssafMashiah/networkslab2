@@ -3,6 +3,46 @@ body
 	font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
 }
 
+/* Start of scrolling chat thing */
+
+div.chatArea 
+{
+	font-family:"Verdana";
+	font-size: 12px;
+	width: 550px; 
+	height: 300px;
+	padding-left: 5px;
+	padding-right: 5px; 
+	border-color: #6699CC;
+	border-width: 1px; 
+	border-style: solid;
+	left: 50%;
+	position: relative;
+	overflow: auto;
+}
+
+div.timestamp
+{
+	color: #808080;
+}
+
+div.fromWho
+{
+	text-decoration: underline;
+}
+
+div.chatdata
+{
+	float: left;
+}
+
+input.messagebox:focus 
+{
+    background-color: #63ADD0;
+}
+
+/* end of scrolling chat thing */
+
 /* start of table related */
 
 #generated
