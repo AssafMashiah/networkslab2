@@ -164,15 +164,21 @@ public class DispatcherThread implements Runnable {
 				case chat_service:
 					// Add the IP address of the request to the string param
 					tracer.TraceToConsole("Creating Chat service params");
-					String[] chatParams = new String[2];
+					String[] chatParams = new String[params.length + 1];
 					if (params.length == 0)
 					{
 						chatParams = params;
 					}
 					else
 					{
-						chatParams[0] = params[0];
-						chatParams[1] = m_ClientSocket.getInetAddress().getHostAddress();
+						int i = 0;
+						for (;i < params.length; i++)
+						{
+							chatParams[i] = params[i];
+						}
+						
+						// we are adding the host address of the client socket!!
+						chatParams[i] = m_ClientSocket.getInetAddress().getHostAddress();
 					}
 					
 					ChatService.Functions chatFuncName = ChatService.Functions.valueOf(uriData.FunctionName);

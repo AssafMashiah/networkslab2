@@ -51,7 +51,7 @@ public class ChatService implements IChatService
 				break;
 			case send_message:
 				// if we have a paramater, we remove the timestamps
-				if (params.length > 1)
+				if (params.length > 2)
 				{
 					showTS = false;
 				}
@@ -99,16 +99,14 @@ public class ChatService implements IChatService
 		
 		for (ChatBuddyData data : m_ChatData)
 		{
+			String leftMost = " leftMost";
 			if (showTimestamp)
 			{
-				sb.append("<div class=\"timestamp chatdata\">[");
-				sb.append(data.TimeStamp);
-				sb.append("]</div>");
+				sb.append(String.format("<div class=\"timestamp chatdata%s\">[%s]</div>", leftMost, data.TimeStamp));
+				leftMost = "";
 			}
 			
-			sb.append("<div class=\"fromWho chatdata\">");
-			sb.append(data.TitleName);
-			sb.append("</div>");
+			sb.append(String.format("<div class=\"fromWho chatdata%s\">%s</div>", leftMost, data.TitleName));
 			sb.append("<div class=\"chatdata\">");
 			sb.append(data.Message);
 			sb.append("</div><div class=\"padder\"></div><br>\n");
@@ -119,7 +117,7 @@ public class ChatService implements IChatService
 			ChatBuddyData lastMessage = m_ChatData.get(m_ChatData.size() - 1);
 			if (lastMessage.IsMessageOld())
 			{
-				sb.append("<div class=\"timestamp chatdata\">Last message received on ");
+				sb.append("<div class=\"timestamp chatdata leftMost\">Last message received on ");
 				sb.append(lastMessage.TimeStamp);
 				sb.append("</div>\n");
 			}

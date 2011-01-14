@@ -81,7 +81,15 @@ function getChatDataFromServer()
 	
 	if (xmlHttpGetReq)
 	{
-		xmlHttpGetReq.open("GET", "/chat_service/get_chat_data?a=b", true);
+		getTarget = "/chat_service/get_chat_data";
+		
+		var showTSBox = document.getElementById("showTS");
+	    if (!showTSBox.checked)
+	    {
+	    	getTarget += "?hideTS=true";
+	    }
+		
+		xmlHttpGetReq.open("GET", getTarget, true);
 		// this header is a IE hack to make the get request work (otherwise it will think the data is cached and the responseText will be "")
 		xmlHttpGetReq.setRequestHeader("If-Modified-Since", "Sat, 1 Jan 2000 00:00:00 GMT");
 		xmlHttpGetReq.onreadystatechange = function() 
@@ -102,6 +110,13 @@ function getQueryStringForChat()
 	
 	// no need for the ? before, we are posting here
     qstr = 'q1=' + escape(textInput.value);
+    
+    var showTSBox = document.getElementById("showTS");
+    if (!showTSBox.checked)
+    {
+    	qstr += "&hideTS=true";
+    }
+    
     return qstr;
 }
 
@@ -139,6 +154,11 @@ function sendBoxKD()
 			</td>
 			<td>
 				<a class="button" href="#" onClick="this.blur();postMessageSending();"><span>Send</span></a>
+			</td>
+		</tr>
+		<tr colspan="2">
+			<td>
+				<input id="showTS" type="checkbox" checked>Show time stamps on messages</input>
 			</td>
 		</tr>
 	</table>
