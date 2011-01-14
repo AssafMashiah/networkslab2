@@ -103,7 +103,7 @@ public class FilesService implements IFileService
 		String[] files = fileList.split(":");
 		
 		// do we even have any files?
-		if (files.length == 0)
+		if (fileList.length() == 0)
 		{
 			sb.append("Friend is not sharing any files :(");
 		}
