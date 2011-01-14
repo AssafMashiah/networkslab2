@@ -79,15 +79,15 @@ public abstract class ProxyBase
 		
 		if (params.length > 0)
 		{
-			builder.append(String.format("?param1=%s", params[0]));
+			builder.append(String.format("?param1=%s", Lab2Utils.URLEncodeString(params[0])));
 		
 			for (int i = 1; i < params.length; i++)
 			{
-				builder.append(String.format("&param%d=%s", i + 1, params[i]));
+				builder.append(String.format("&param%d=%s", i + 1, Lab2Utils.URLEncodeString(params[i])));
 			}
 		}
 		
-		request.SetRequestURI(String.format("%s%s", uri, Lab2Utils.URLEncodeString(builder.toString())));
+		request.SetRequestURI(String.format("%s%s", uri, builder.toString()));
 		
 		return request;
 	}
