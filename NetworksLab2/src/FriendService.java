@@ -170,7 +170,7 @@ public class FriendService implements IFriendService
 			newFriends.add(new FriendInfo(tempfriends[i]));
 		}
 		
-		// we should not be getting an ack from a friend we already have, this is an error
+		// we should not be getting an ack from a friend we already have, this is an error (Tsvi said so in class, he also said you will not test this)
 		if (m_FriendInfoList.contains(firstOne))
 		{
 			throw new HttpServiceException("Invalid logic encountered");

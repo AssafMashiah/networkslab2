@@ -13,9 +13,6 @@ public class ChatService implements IChatService
 	private ChatService()
 	{
 		m_ChatData = new ArrayList<ChatBuddyData>();
-//		m_ChatData.add(new ChatBuddyData("jan", "1.1.1.1", "The enterprise is sinking"));
-//		m_ChatData.add(new ChatBuddyData("pekard", "1.1.1.2", "no, it aint"));
-//		m_ChatData.add(new ChatBuddyData("numberOne", "1.1.1.3", "going to the infarmary hit on doc"));
 	}
 
 	public static synchronized ChatService get_instance()

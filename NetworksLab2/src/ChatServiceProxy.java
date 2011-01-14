@@ -5,6 +5,7 @@ import java.net.UnknownHostException;
 public class ChatServiceProxy extends ProxyBase implements IChatService
 {
 	
+	private static final Tracer tracer = Tracer.getTracerForThisClass();
 	
 	public ChatServiceProxy(String targetIP, int targetPort) 
 	{
@@ -16,6 +17,9 @@ public class ChatServiceProxy extends ProxyBase implements IChatService
 		HttpRequestParser request = GetRequest(HttpRequestMethod.GET, String.format("/chat_service/new_message?p1=%s", message));
 		
 		HttpResponseParser response = SendData(request);
+		
+		tracer.TraceToConsole(String.format("Message '%s' was sent to %s", message, this.DestinationIP));
+		tracer.TraceToConsole(String.format("Response was:\n%s", response.toString()));
 		
 		// validate response
 		if (!response.GetHttpResponseCodeObject().equals(HttpResponseCode.OK))
