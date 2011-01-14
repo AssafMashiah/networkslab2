@@ -51,6 +51,9 @@ public enum HttpResponseCode {
 		case 301:
 			retVal = HttpResponseCode.MOVED_PERMANENTLY;
 			break;
+		case 400:
+			retVal = HttpResponseCode.BAD_REQUEST;
+			break;
 		case 404:
 			retVal = HttpResponseCode.NOT_FOUND;
 			break;

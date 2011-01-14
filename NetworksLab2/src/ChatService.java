@@ -108,18 +108,29 @@ public class ChatService implements IChatService
 	 * @throws UnknownHostException 
 	 * @return (new) Chat data 
 	 */
-	private String sendMessage(String message) throws UnknownHostException, HttpProxyException, IOException, HttpHeaderParsingException, HttpResponseParsingException
+	private String sendMessage(String message)
 	{
 		// add my message to log
 		newMessage(message, "me, dummy!");
 		
 		// scan all friend and send to their proxy newMessage
-		for (FriendInfo friend : FriendService.get_instance().GetFriends())
+		FriendInfo[] friends = FriendService.get_instance().GetFriends();
+		for (int i = 0; i < friends.length; i++)
 		{
+			FriendInfo friend = friends[i];
+			
 			tracer.TraceToConsole(String.format("Sending message to %s:%s", friend.IP, friend.Port));
 			
 			ChatServiceProxy prox = new ChatServiceProxy(friend.IP, friend.Port);
-			prox.newMessage(message);
+			try
+			{
+				prox.newMessage(message);
+			}
+			catch (Exception e)
+			{
+				tracer.TraceToConsole("Failed to send message!! removing friend");
+				FriendService.get_instance().RemoveFriend(friend.IP, friend.Port);
+			}
 		}
 		
 		return getChatData();

@@ -87,7 +87,7 @@ public abstract class ProxyBase
 			}
 		}
 		
-		request.SetRequestURI(String.format("%s%s", uri, builder.toString()));
+		request.SetRequestURI(Lab2Utils.URLEncodeString(String.format("%s%s", uri, builder.toString())));
 		
 		return request;
 	}

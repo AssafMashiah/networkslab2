@@ -4,6 +4,8 @@ import java.net.UnknownHostException;
 public class FilesServiceProxy extends ProxyBase implements IFileService 
 {
 
+	private static final Tracer tracer = Tracer.getTracerForThisClass();
+	
 	public FilesServiceProxy(String targetIP, int targetPort) 
 	{
 		super(targetIP, targetPort);
@@ -48,13 +50,19 @@ public class FilesServiceProxy extends ProxyBase implements IFileService
 			throw new HttpProxyException(String.format("Destination reported an error during add_me_as_a_friend: %s", response.GetHttpResponseCode()));
 		}
 		
+		tracer.TraceToConsole("Got file back");
+		
 		// Decoding the file from Base64
 		byte[] decodedFile = Base64Coder.decode(new String(response.GetContent()));
+		
+		tracer.TraceToConsole("Decoded the file");
 		
 		// Data on where to save the file
 		String fileNameForSaving = String.format("%s%s", FilesService.get_instance().GetRootDir(), fileName);
 		
 		// The writing of the file
 		Lab2Utils.WriteFile(decodedFile, fileNameForSaving);
+		
+		tracer.TraceToConsole("Wrote file to disk");
 	}
 }

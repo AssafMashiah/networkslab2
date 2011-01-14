@@ -157,9 +157,12 @@ public class FilesService implements IFileService
 		//read file
 		byte[] bytes = Lab2Utils.ReadFile(m_RootDir + fileName);
 		
+		tracer.TraceToConsole("File read");
+		
 		// base64 it
-		//String basedFile = Base64.encodeToString(bytes, false);
 		String basedFile = new String(Base64Coder.encode(bytes));
+		
+		tracer.TraceToConsole("File Encoded");
 		
 		return basedFile;
 	}
