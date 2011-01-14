@@ -301,13 +301,13 @@ public class FriendService implements IFriendService
 	{
 		DatagramSocket socket = new DatagramSocket();
 		
-		InetAddress hostIP = InetAddress.getLocalHost();
+		FriendInfo me = FriendService.get_instance().GetMyInfo();
 		
 		// payload is "Be my friend? [ip]:[dispatcher port]
-		String payload = String.format("Be my friend? %s:%d", hostIP.getHostAddress(), m_DispatcherPort);
+		String payload = String.format("Be my friend? %s:%d", me.IP, m_DispatcherPort);
 		
 		// create a UDP Datagram and broadcast the payload
-		String[] IPchunks = hostIP.getHostAddress().split("[.]");
+		String[] IPchunks = me.IP.split("[.]");
 		
 		// change last octet to 255
 		String brodcastIP = String.format("%s.%s.%s.%d", IPchunks[0], IPchunks[1], IPchunks[2], 255);

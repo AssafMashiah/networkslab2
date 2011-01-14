@@ -6,6 +6,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * This is a dispatcher thread for the dispatcher server. It handles the
@@ -151,6 +153,8 @@ public class DispatcherThread implements Runnable {
 				String[] params = null;
 				params = request.GetQueryStringParams(HttpQueryStringType.BOTH).values().toArray(new String[0]);
 
+				TraceFuncName(uriData, request.GetQueryStringParams(HttpQueryStringType.BOTH));
+				
 				switch(HttpServices.valueOf(uriData.ServiceName))
 				{
 				case commands_service:
@@ -273,6 +277,40 @@ public class DispatcherThread implements Runnable {
 		}
 		
 		return response;
+	}
+	
+	/**
+	 * Trace as required
+	 * @param data
+	 * @param params
+	 */
+	private void TraceFuncName(HttpURIData data, Map<String, String> params)
+	{
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(data.FunctionName);
+		sb.append("(");
+		
+		Iterator<Map.Entry<String, String>> it = params.entrySet().iterator();
+		while (it.hasNext()) 
+		{
+	        Map.Entry<String, String> entry = it.next();
+			sb.append(entry.getKey());
+			sb.append(":");
+			sb.append(entry.getValue());
+			if (it.hasNext())
+			{
+				sb.append(",");
+			}
+	    }
+		
+		sb.append(")");
+		
+		// this was the requested trace
+		tracer.TraceToConsole(sb.toString());
+		
+		// and we want this one as well
+		tracer.TraceToConsole(String.format("Going to run service: %s, function: %s", data.ServiceName, sb.toString()));
 	}
 	
 	/**

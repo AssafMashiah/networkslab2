@@ -14,6 +14,8 @@ public class DispatcherServer implements Runnable {
 	private static final Tracer tracer = Tracer.getTracerForThisClass();
 	
 	private String m_ServerName;
+	
+	private String m_IPAddress;
 
 	private ConfigParser m_Configuration;
 	private int m_portNumber;
@@ -77,8 +79,13 @@ public class DispatcherServer implements Runnable {
 			
 			// set my info
 			String nickname = m_Configuration.GetValue("nickname");
-			String IP = InetAddress.getLocalHost().getHostAddress();
-			FriendService.get_instance().SetMyInfo(new FriendInfo(nickname, IP, m_portNumber));
+			m_IPAddress = m_Configuration.GetValue("IP");
+			if (m_IPAddress == null)
+			{
+				m_IPAddress = InetAddress.getLocalHost().getHostAddress();
+			}
+			
+			FriendService.get_instance().SetMyInfo(new FriendInfo(nickname, m_IPAddress, m_portNumber));
 			FriendService.get_instance().SetDispatcherPort(m_portNumber);
 			
 			// set p2p root dir
