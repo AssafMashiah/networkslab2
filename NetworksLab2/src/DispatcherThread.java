@@ -175,12 +175,7 @@ public class DispatcherThread implements Runnable {
 					
 					scontent = ChatService.get_instance().callFunction(chatFuncName, chatParams);
 					content = scontent.getBytes();
-					
-					if (chatFuncName.equals(ChatService.Functions.send_message))
-					{
-						String location = "/chat_service/get_chat_page";
-						response = HttpResponseParser.GetRedirectResponse(location, request.GetHttpVersion());
-					}
+
 					break;
 				case css:
 					// using Images service as it will get us the data in the way we want it for css files

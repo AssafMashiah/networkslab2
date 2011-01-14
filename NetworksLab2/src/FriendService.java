@@ -30,18 +30,6 @@ public class FriendService implements IFriendService
 		return m_Instance;
 	}
 	
-//	private FriendService(FriendInfo myInfo)
-//	{
-//		m_MyInfo = new FriendInfo(myInfo);
-//		m_FriendInfoList = new ArrayList<FriendInfo>();
-//	}
-//	
-//	private FriendService(String nickname, String IP, int port)
-//	{
-//		m_MyInfo = new FriendInfo(nickname, IP, port);
-//		m_FriendInfoList = new ArrayList<FriendInfo>();
-//	}
-	
 	public void SetMyInfo(FriendInfo me)
 	{
 		m_MyInfo = new FriendInfo(me);

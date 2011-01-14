@@ -1,6 +1,7 @@
 body
 {
 	font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+	background-image:url('/images/zenBack.jpg');
 }
 
 /* Start of scrolling chat thing */

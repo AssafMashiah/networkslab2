@@ -11,6 +11,7 @@ public enum HttpServices {
 	css,
 	files_service,
 	friends_service,
-	images
+	images,
+	js
 	
 }

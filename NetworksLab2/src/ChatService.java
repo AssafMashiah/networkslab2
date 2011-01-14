@@ -38,11 +38,14 @@ public class ChatService implements IChatService
 			
 			switch (functionName) 
 			{
+			case get_chat_data:
+				retVal.append(getChatData());
+				break;
 			case get_chat_page:
 				retVal.append(getChatPage());
 				break;
 			case send_message:
-				sendMessage(params[0]);
+				retVal.append(sendMessage(params[0]));
 				break;
 			case new_message:
 				newMessage(params[0], params[1]);
@@ -72,6 +75,10 @@ public class ChatService implements IChatService
 		return t.CompileTemplate();
 	}
 	
+	/**
+	 * generates the chat data
+	 * @return
+	 */
 	private String getChatData()
 	{
 		tracer.TraceToConsole("Genrating the chat data");
@@ -102,8 +109,9 @@ public class ChatService implements IChatService
 	 * @throws IOException 
 	 * @throws HttpProxyException 
 	 * @throws UnknownHostException 
+	 * @return (new) Chat data 
 	 */
-	private void sendMessage(String message) throws UnknownHostException, HttpProxyException, IOException, HttpHeaderParsingException, HttpResponseParsingException
+	private String sendMessage(String message) throws UnknownHostException, HttpProxyException, IOException, HttpHeaderParsingException, HttpResponseParsingException
 	{
 		// add my message to log
 		newMessage(message, "me, dummy!");
@@ -116,6 +124,8 @@ public class ChatService implements IChatService
 			ChatServiceProxy prox = new ChatServiceProxy(friend.IP, friend.Port);
 			prox.newMessage(message);
 		}
+		
+		return getChatData();
 	}
 	
 	/**

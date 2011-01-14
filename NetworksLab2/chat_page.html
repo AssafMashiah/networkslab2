@@ -10,41 +10,125 @@
 </head>
 <script type="text/javascript">
 <!--//
-function sendNewMessage() 
+
+var chatDataRefresh = 0;
+
+function restartChatUpdate()
 {
-	textInput = document.getElementById("messageText");
+	clearInterval(chatDataRefresh);
+	chatDataRefresh = setInterval( "getChatDataFromServer()", 3000);
+}
+
+function shouldPostMessage() 
+{
+	var textInput = document.getElementById("messageText");
     
-    if (textInput.value != "")
+    if (textInput.value == "")
     {
-    	document.sendMessage.action = "/chat_service/send_message?p1=" + textInput.value; 
-    	document.sendMessage.submit();
+    	return false;
     }
+    else
+    {
+    	return true;
+    }
+}
+
+function getLab2xmlHttp()
+{
+	var xmlHttpReq = false;
+	
+	// IE7+/Mozilla/Safari
+	if (window.XMLHttpRequest) 
+	{
+        xmlHttpReq = new XMLHttpRequest();
+    }
+    // Old IE...
+    else if (window.ActiveXObject) 
+    {
+    	xmlHttpReq = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    
+    return xmlHttpReq;
+}
+
+function postMessageSending()
+{
+	var xmlHttpReq = getLab2xmlHttp();
+	
+	if (xmlHttpReq && shouldPostMessage())
+	{
+		
+		xmlHttpReq.open("POST", "/chat_service/send_message", true);
+		xmlHttpReq.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		xmlHttpReq.onreadystatechange = function() 
+		{
+	        if (xmlHttpReq.readyState == 4) 
+	        {
+	            updateChatData(xmlHttpReq.responseText);
+	        }
+	    }
+	    
+	    xmlHttpReq.send(getQueryStringForChat());
+    }
+}
+
+function getChatDataFromServer()
+{
+	var xmlHttpGetReq = getLab2xmlHttp();
+	
+	if (xmlHttpGetReq)
+	{
+		xmlHttpGetReq.open("GET", "/chat_service/get_chat_data", true);
+		// this header is a IE hack to make the get request work (otherwise it will think the data is cached and the responseText will be "")
+		xmlHttpGetReq.setRequestHeader("If-Modified-Since", "Sat, 1 Jan 2000 00:00:00 GMT");
+		xmlHttpGetReq.onreadystatechange = function() 
+		{
+	        if (xmlHttpGetReq.readyState == 4) 
+	        {
+	            updateChatData(xmlHttpGetReq.responseText);
+	        }
+	    }
+	    
+	    xmlHttpGetReq.send(null);
+    }
+}
+
+function getQueryStringForChat()
+{
+	var textInput = document.getElementById("messageText");
+	
+	// no need for the ? before, we are posting here
+    qstr = 'q1=' + escape(textInput.value);
+    return qstr;
+}
+
+function updateChatData(data)
+{
+    document.getElementById("chatArea").innerHTML = data;
 }
 
 //-->
 </script>
-<body>
+<body onLoad="restartChatUpdate();getChatDataFromServer();">
 	<H1 align="center">Chat page!!!</H1>
 
 	<div class="centerwrap">
-		<div class="chatArea">
+		<div id="chatArea" class="chatArea">
 			[###CHAT_DATA]				
 		</div>
 	</div>
 	<div class="clearer"></div>
 	
-	<form name="sendMessage" action="/chat_service/send_message" method="post">
-		<table align="center">
-			<tr>
-				<td>
-					<input class="messagebox" type="text" id="messageText" size="75"></input>
-				</td>
-				<td>
-					<a class="button" href="#" onClick="this.blur();sendNewMessage();"><span>Send</span></a>
-				</td>
-			</tr>
-		</table>
-	</form>
+	<table align="center">
+		<tr>
+			<td>
+				<input class="messagebox" type="text" id="messageText" size="75"></input>
+			</td>
+			<td>
+				<a class="button" href="#" onClick="this.blur();postMessageSending();"><span>Send</span></a>
+			</td>
+		</tr>
+	</table>
 	
 	<div class="centerwrap">
 		<a style="left:50%;position:relative;" href="/commands_service/get_main_page">Back to Main Page</a>
