@@ -1,4 +1,4 @@
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -12,7 +12,7 @@ public class HttpRequestParser extends HttpParser {
 	// This is because maybe the client will want to handle them differently (this is us, begging for a bonus, we have puppy eyes.. honestly!)
 	// This data structure might be an overkill, but it feels like the most readable way of doing so
 	// Memory wise it is probably possible to do this at a lower footprint, but its more simple to understand and extend this way
-	private HashMap<HttpQueryStringType, HashMap<String, String>> m_QueryString;
+	private LinkedHashMap<HttpQueryStringType, LinkedHashMap<String, String>> m_QueryString;
 	
 	public HttpRequestParser()
 	{
@@ -63,7 +63,7 @@ public class HttpRequestParser extends HttpParser {
 	{
 		try
 		{
-			m_QueryString = new HashMap<HttpQueryStringType, HashMap<String, String>>();
+			m_QueryString = new LinkedHashMap<HttpQueryStringType, LinkedHashMap<String, String>>();
 			
 			
 			// did we get any params from the URI?
@@ -109,9 +109,9 @@ public class HttpRequestParser extends HttpParser {
 		}
 		
 		// create a copy of the data and return it to the user for farther abuse
-		HashMap<String, String> retVal = new HashMap<String, String>();
+		LinkedHashMap<String, String> retVal = new LinkedHashMap<String, String>();
 		
-		HashMap<String, String> tempMap;
+		LinkedHashMap<String, String> tempMap;
 		switch (type)
 		{
 		case GET:
@@ -151,9 +151,9 @@ public class HttpRequestParser extends HttpParser {
 	 * @param params The param string
 	 * @return A key-value collection of the keys and value from the param string
 	 */
-	private HashMap<String, String> parseQueryString(String params)
+	private LinkedHashMap<String, String> parseQueryString(String params)
 	{
-		HashMap<String, String> currentParams = new HashMap<String, String>();
+		LinkedHashMap<String, String> currentParams = new LinkedHashMap<String, String>();
 		
 		boolean finishedAllParams = false;
 		while (!finishedAllParams)
