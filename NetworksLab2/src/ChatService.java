@@ -2,6 +2,8 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class ChatService implements IChatService
 {
@@ -11,9 +13,19 @@ public class ChatService implements IChatService
 	
 	private ArrayList<ChatBuddyData> m_ChatData;
 	
+	private LinkedHashMap<String, String> m_MessageConvertMap;
+	
 	private ChatService()
 	{
 		m_ChatData = new ArrayList<ChatBuddyData>();
+		m_MessageConvertMap = new LinkedHashMap<String, String>();
+		
+		// bold
+		m_MessageConvertMap.put("\\*([<?/?\\w+>?\\s?]*)\\*", "<b>$1</b>");
+		// italic
+		m_MessageConvertMap.put("_([<?/?\\w+>?\\s?]*)_", "<i>$1</i>");
+		// strike
+		m_MessageConvertMap.put("-([<?/?\\w+>?\\s?]*)-", "<strike>$1</strike>");
 	}
 
 	public static synchronized ChatService get_instance()
@@ -108,7 +120,8 @@ public class ChatService implements IChatService
 			
 			sb.append(String.format("<div class=\"fromWho chatdata%s\">%s</div>", leftMost, data.TitleName));
 			sb.append("<div class=\"chatdata\">");
-			sb.append(data.Message);
+//			String newMessage = data.Message.replaceAll("\\*([\\w+\\s?]*)\\*", "<b>$1</b>");
+			sb.append(processMessage(data.Message));
 			sb.append("</div><div class=\"padder\"></div><br>\n");
 		}
 
@@ -124,6 +137,18 @@ public class ChatService implements IChatService
 		}
 		
 		return sb.toString();
+	}
+	
+	private String processMessage(String message)
+	{
+		String pMessage = message;
+		
+		for (Map.Entry<String, String> entry : m_MessageConvertMap.entrySet())
+		{
+			pMessage = pMessage.replaceAll(entry.getKey(), entry.getValue());
+		}
+		
+		return pMessage;
 	}
 	
 	/**
