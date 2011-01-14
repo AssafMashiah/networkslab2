@@ -238,18 +238,12 @@ public class FriendService implements IFriendService
 				tracer.TraceToConsole("Processing friend: " + friend.toString());
 				sb.append(String.format("<tr%s>\n<td>%s</td>\n<td>%s</td>\n<td>%d</td>\n<td>", alt, friend.NickName, friend.IP, friend.Port));
 				String userIpPort = String.format("\"%s\", \"%d\"", friend.IP, friend.Port);
-				sb.append("<input type=\"button\" value=\"Remove Friend\" onClick='doRemoveAction(" + userIpPort + ")'></td>\n");
-				sb.append("<td><input type=\"button\" value=\"Go To Files Page\" onClick='doFilesPage(" + userIpPort + ")'></td></tr>\n");
+				
+				sb.append(Lab2Utils.GenerateStyledButton("Remove Friend", String.format("doRemoveAction(%s)", userIpPort)));
+				sb.append("</td>\n<td>");
+				sb.append(Lab2Utils.GenerateStyledButton("Go to Files Page", String.format("doFilesPage(%s)", userIpPort)));
+				sb.append("</td></tr>\n");
 			}
-			
-//			for (FriendInfo friend : m_FriendInfoList)
-//			{
-//				tracer.TraceToConsole("Processing friend: " + friend.toString());
-//				sb.append(String.format("<tr><td>%s</td><td>%s</td><td>%d</td>\n<td>", friend.NickName, friend.IP, friend.Port));
-//				String userIpPort = String.format("\"%s\", \"%d\"", friend.IP, friend.Port);
-//				sb.append("<input type=\"button\" value=\"Remove Friend\" onClick='doRemoveAction(" + userIpPort + ")'></td>\n");
-//				sb.append("<td><input type=\"button\" value=\"Go To Files Page\" onClick='doFilesPage(" + userIpPort + ")'></td></tr>\n");
-//			}
 			
 			sb.append("</table>");
 		}
