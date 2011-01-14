@@ -87,7 +87,9 @@ public abstract class ProxyBase
 			}
 		}
 		
-		request.SetRequestURI(String.format("%s%s", uri, builder.toString()));
+		String reqUri = String.format("%s%s", uri, builder.toString());
+		tracer.TraceToConsole("Setting request URI to: " + reqUri);
+		request.SetRequestURI(reqUri);
 		
 		return request;
 	}

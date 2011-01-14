@@ -14,7 +14,7 @@ public class ChatServiceProxy extends ProxyBase implements IChatService
 	
 	public void newMessage(String message) throws HttpProxyException, UnknownHostException, IOException, HttpHeaderParsingException, HttpResponseParsingException
 	{
-		HttpRequestParser request = GetRequest(HttpRequestMethod.GET, String.format("/chat_service/new_message?p1=%s", message));
+		HttpRequestParser request = GetRequest(HttpRequestMethod.GET, String.format("/chat_service/new_message?p1=%s", Lab2Utils.URLEncodeString(message)));
 		
 		HttpResponseParser response = SendData(request);
 		
