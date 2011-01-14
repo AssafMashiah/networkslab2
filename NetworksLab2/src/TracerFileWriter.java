@@ -60,7 +60,7 @@ public class TracerFileWriter
 		{
 			try 
 		   	{
-				m_fstream.write(String.format("[%s] %s: %s", getTime(), message, name).getBytes());
+				m_fstream.write(String.format("[%s] %s: %s", getTime(), name, message).getBytes());
 				m_fstream.write("\r\n".getBytes());
 		   	}
 			catch (IOException e) 
