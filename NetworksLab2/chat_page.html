@@ -81,7 +81,7 @@ function getChatDataFromServer()
 	
 	if (xmlHttpGetReq)
 	{
-		xmlHttpGetReq.open("GET", "/chat_service/get_chat_data", true);
+		xmlHttpGetReq.open("GET", "/chat_service/get_chat_data?a=b", true);
 		// this header is a IE hack to make the get request work (otherwise it will think the data is cached and the responseText will be "")
 		xmlHttpGetReq.setRequestHeader("If-Modified-Since", "Sat, 1 Jan 2000 00:00:00 GMT");
 		xmlHttpGetReq.onreadystatechange = function() 

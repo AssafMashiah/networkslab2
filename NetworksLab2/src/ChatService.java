@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.text.ParseException;
 import java.util.ArrayList;
 
 public class ChatService implements IChatService
@@ -32,17 +33,30 @@ public class ChatService implements IChatService
 		try
 		{
 			retVal = new StringBuilder();
+			boolean showTS = true;
 			
 			switch (functionName) 
 			{
 			case get_chat_data:
-				retVal.append(getChatData());
+				// if we have a paramater, we remove the timestamps
+				if (params.length > 0)
+				{
+					showTS = false;
+				}
+				
+				retVal.append(getChatData(showTS));
 				break;
 			case get_chat_page:
 				retVal.append(getChatPage());
 				break;
 			case send_message:
-				retVal.append(sendMessage(params[0]));
+				// if we have a paramater, we remove the timestamps
+				if (params.length > 1)
+				{
+					showTS = false;
+				}
+				
+				retVal.append(sendMessage(params[0], showTS));
 				break;
 			case new_message:
 				newMessage(params[0], params[1]);
@@ -66,7 +80,7 @@ public class ChatService implements IChatService
 		
 		// replace place holders in template
 		HTMLTemplate t = new HTMLTemplate("chat_page.html");
-		t.AddValueToTemplate("CHAT_DATA", getChatData());
+		t.AddValueToTemplate("CHAT_DATA", getChatData(true));
 		
 		tracer.TraceToConsole("Chat page was generated!");
 		return t.CompileTemplate();
@@ -75,8 +89,9 @@ public class ChatService implements IChatService
 	/**
 	 * generates the chat data
 	 * @return
+	 * @throws ParseException 
 	 */
-	private String getChatData()
+	private String getChatData(boolean showTimestamp)
 	{
 		tracer.TraceToConsole("Genrating the chat data");
 		
@@ -84,15 +99,30 @@ public class ChatService implements IChatService
 		
 		for (ChatBuddyData data : m_ChatData)
 		{
-			sb.append("<div class=\"timestamp chatdata\">[");
-			sb.append(data.TimeStamp);
-			sb.append("]&nbsp;</div>");
+			if (showTimestamp)
+			{
+				sb.append("<div class=\"timestamp chatdata\">[");
+				sb.append(data.TimeStamp);
+				sb.append("]</div>");
+			}
+			
 			sb.append("<div class=\"fromWho chatdata\">");
 			sb.append(data.TitleName);
 			sb.append("</div>");
-			sb.append("<div class=\"chatdata\">&nbsp;");
+			sb.append("<div class=\"chatdata\">");
 			sb.append(data.Message);
 			sb.append("</div><div class=\"padder\"></div><br>\n");
+		}
+
+		if (!showTimestamp && sb.length() > 0)
+		{
+			ChatBuddyData lastMessage = m_ChatData.get(m_ChatData.size() - 1);
+			if (lastMessage.IsMessageOld())
+			{
+				sb.append("<div class=\"timestamp chatdata\">Last message received on ");
+				sb.append(lastMessage.TimeStamp);
+				sb.append("</div>\n");
+			}
 		}
 		
 		return sb.toString();
@@ -101,6 +131,7 @@ public class ChatService implements IChatService
 	/**
 	 * Sends the given msg parameter to all friends by calling the friend’s function
 	 * @param message
+	 * @param showTS should we show the timestamp at the returned data?
 	 * @throws HttpResponseParsingException 
 	 * @throws HttpHeaderParsingException 
 	 * @throws IOException 
@@ -108,7 +139,7 @@ public class ChatService implements IChatService
 	 * @throws UnknownHostException 
 	 * @return (new) Chat data 
 	 */
-	private String sendMessage(String message)
+	private String sendMessage(String message, boolean showTS)
 	{
 		// add my message to log
 		newMessage(message, "me, dummy!");
@@ -133,7 +164,7 @@ public class ChatService implements IChatService
 			}
 		}
 		
-		return getChatData();
+		return getChatData(showTS);
 	}
 	
 	/**
