@@ -201,7 +201,7 @@ public class DispatcherThread implements Runnable {
 					// if this was a remote download request
 					if (FilesService.Functions.valueOf(uriData.FunctionName).equals(IFileService.Functions.download_file_from))
 					{
-						String location = String.format("/files_service/get_file_sharing_page?p1=%s&p2=%s", params[1], params[0]);
+						String location = String.format("/files_service/get_file_sharing_page?p1=%s&p2=%s", params[1], params[2]);
 						response = HttpResponseParser.GetRedirectResponse(location, request.GetHttpVersion());
 					}
 					break;

@@ -56,13 +56,13 @@ public class FilesService implements IFileService
 			
 			switch (functionName) {
 			case get_file_sharing_page:
-				retVal.append(getFileSharingPage(params[1], Integer.parseInt(params[0])));
+				retVal.append(getFileSharingPage(params[0], Integer.parseInt(params[1])));
 				break;
 			case download_file:
 				retVal.append(downloadFile(params[0]));
 				break;
 			case download_file_from:
-				downloadFileRemotly(params[2], params[1], Integer.parseInt(params[0]));
+				downloadFileRemotly(params[0], params[1], Integer.parseInt(params[2]));
 				break;
 			case get_shared_files:
 				retVal.append(getSharedFiles());
