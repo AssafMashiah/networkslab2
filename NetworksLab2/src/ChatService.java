@@ -18,7 +18,9 @@ public class ChatService implements IChatService
 	{
 		m_ChatData = new ArrayList<ChatBuddyData>();
 		m_MessageConvertMap = new LinkedHashMap<String, String>();
-		
+
+		// handle double space
+		m_MessageConvertMap.put(" ", "&nbsp;");
 		// bold
 		m_MessageConvertMap.put("\\*([<?/?\\w+>?\\s?]*)\\*", "<b>$1</b>");
 		// italic
@@ -51,8 +53,6 @@ public class ChatService implements IChatService
 		m_MessageConvertMap.put(":\\(\\|\\)", "<img src=\"/images/monkey.gif\">");
 		// :(
 		m_MessageConvertMap.put(":\\(", "<img src=\"/images/frown.gif\">");
-		// handle double space
-		m_MessageConvertMap.put(" ", "&nbsp;");
 	}
 
 	public static synchronized ChatService get_instance()

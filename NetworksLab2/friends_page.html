@@ -27,8 +27,11 @@ function addFriendSource()
 	data = document.getElementById("newfriendipport").value;
 	arr = data.split(":");
 	
-	document.addSource.action = "/friends_service/add_friend_source?p1=" + arr[0] + "&p2=" + arr[1];
-	document.addSource.submit();
+	if (arr.length == 2)
+	{
+		document.addSource.action = "/friends_service/add_friend_source?p1=" + arr[0] + "&p2=" + arr[1];
+		document.addSource.submit();
+	}
 }
 
 //-->

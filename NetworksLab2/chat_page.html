@@ -133,6 +133,9 @@ function updateChatData(data)
     if (data.substr(0,2) == "_L")
     {
     	document.getElementById("LastUpdate").innerHTML = data.substr(2);
+    	
+    	var ca = document.getElementById("chatArea");
+    	ca.scrollTop = ca.scrollHeight
     }
     else
     {
@@ -140,6 +143,9 @@ function updateChatData(data)
     	{
 	    	document.getElementById("LastUpdate").innerHTML = "";
 	    	document.getElementById("chatData").innerHTML += data;
+	    	
+	    	var ca = document.getElementById("chatArea");
+    		ca.scrollTop = ca.scrollHeight
     	}
     }
 }
