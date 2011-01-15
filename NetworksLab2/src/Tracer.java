@@ -17,7 +17,7 @@ public class Tracer {
 
 	// Same comment from Starter about ifdef 
 	private static final boolean TRACE_ON = true; 
-	private static final boolean LOG_FILE_ON = true;
+	private static final boolean LOG_FILE_ON = false;
 	
 	// Object that will print to the file
 	public TracerFileWriter m_TracerFileWriter;

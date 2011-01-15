@@ -10,10 +10,34 @@ import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.SimpleTimeZone;
 
 public class Lab2Utils
 {
 	private final static String DATE_FORMAT_NOW = "yyyy-MM-dd HH:mm:ss";
+	
+	/**
+	 * Java's System.currentTimeMillis() is not from UTC, this will return the correct number from UTC
+	 * @return Millies since epoch in UTC
+	 */
+	public static long GetEpochFromUTC()
+	{
+		GregorianCalendar gmtCalendar;
+		long lUTCtime;
+
+		gmtCalendar = new GregorianCalendar(new SimpleTimeZone(0,"GMT+0"));
+		gmtCalendar.setTimeInMillis(System.currentTimeMillis());
+		lUTCtime = gmtCalendar.getTimeInMillis();
+		
+//		gmtCalendar.setTimeInMillis(1295095200377L);
+//		if (lUTCtime > gmtCalendar.getTimeInMillis())
+//		{
+//			lUTCtime = gmtCalendar.getTimeInMillis();
+//		}
+//		
+		return lUTCtime;
+	}
 	
 	/**
 	 * Get the timestamp with the default format (yyyy-MM-dd HH:mm:ss)

@@ -12,6 +12,7 @@
 <!--//
 
 var chatDataRefresh = 0;
+var lastUpdateMillies = currentTimeMillis();
 
 function restartChatUpdate()
 {
@@ -70,6 +71,7 @@ function postMessageSending()
 	    
 	    xmlHttpReq.send(getQueryStringForChat());
 	    
+	    // clear the input box
 	    var textInput = document.getElementById("messageText");
 	    textInput.value = "";
     }
@@ -81,12 +83,12 @@ function getChatDataFromServer()
 	
 	if (xmlHttpGetReq)
 	{
-		getTarget = "/chat_service/get_chat_data";
+		getTarget = "/chat_service/get_chat_data?lastUpdate=" + lastUpdateMillies;
 		
 		var showTSBox = document.getElementById("showTS");
 	    if (!showTSBox.checked)
 	    {
-	    	getTarget += "?hideTS=true";
+	    	getTarget += "&hideTS=true";
 	    }
 		
 		xmlHttpGetReq.open("GET", getTarget, true);
@@ -111,6 +113,8 @@ function getQueryStringForChat()
 	// no need for the ? before, we are posting here
     qstr = 'q1=' + escape(textInput.value);
     
+    qstr += "&lastUpdate=" + lastUpdateMillies;
+    
     var showTSBox = document.getElementById("showTS");
     if (!showTSBox.checked)
     {
@@ -122,10 +126,32 @@ function getQueryStringForChat()
 
 function updateChatData(data)
 {
-    document.getElementById("chatArea").innerHTML = data;
+    lastUpdateMillies = currentTimeMillis();
+    restartChatUpdate();
+    
+    // the _L is the code for the last update string (could use XML...)
+    if (data.substr(0,2) == "_L")
+    {
+    	document.getElementById("LastUpdate").innerHTML = data.substr(2);
+    }
+    else
+    {
+    	if (data != "")
+    	{
+	    	document.getElementById("LastUpdate").innerHTML = "";
+	    	document.getElementById("chatData").innerHTML += data;
+    	}
+    }
 }
 
+function currentTimeMillis() 
+{
+	var now = new Date();
+	var longDate = now.getTime();
 
+	return longDate;
+}
+   
 function sendBoxKD()
 {
 	if (event.keyCode == 13)
@@ -142,7 +168,10 @@ function sendBoxKD()
 
 	<div class="centerwrap">
 		<div id="chatArea" class="chatArea">
-			[###CHAT_DATA]				
+			<div id="chatData">
+				[###CHAT_DATA]
+			</div>
+			<div id="LastUpdate"></div>		
 		</div>
 	</div>
 	<div class="clearer"></div>

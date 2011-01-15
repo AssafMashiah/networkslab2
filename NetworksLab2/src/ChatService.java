@@ -1,6 +1,5 @@
 import java.io.IOException;
 import java.net.UnknownHostException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -26,6 +25,33 @@ public class ChatService implements IChatService
 		m_MessageConvertMap.put("_([<?/?\\w+>?\\s?]*)_", "<i>$1</i>");
 		// strike
 		m_MessageConvertMap.put("-([<?/?\\w+>?\\s?]*)-", "<strike>$1</strike>");
+		// :p
+		m_MessageConvertMap.put(":p|:P", "<img src=\"/images/tongue.gif\">");
+		// ;-)
+		m_MessageConvertMap.put(";-\\)", "<img src=\"/images/wink_nose.gif\">");
+		// ;^)
+		m_MessageConvertMap.put(";\\^\\)", "<img src=\"/images/wink_big_nose.gif\">");
+		// :-|
+		m_MessageConvertMap.put(":-\\|", "<img src=\"/images/straightface.gif\">");
+		// ;)
+		m_MessageConvertMap.put(";\\)", "<img src=\"/images/wink.gif\">");
+		// x-(
+		m_MessageConvertMap.put("x-\\(", "<img src=\"/images/angry.gif\">");
+		// B-)
+		m_MessageConvertMap.put("B-\\)", "<img src=\"/images/cool.gif\">");
+		// =)
+		m_MessageConvertMap.put("=\\)", "<img src=\"/images/equal_smile.gif\">");
+		// :)
+		m_MessageConvertMap.put(":\\)", "<img src=\"/images/smile.gif\">");
+		// :(
+		m_MessageConvertMap.put(":\\(", "<img src=\"/images/frown.gif\">");
+		// :D
+		m_MessageConvertMap.put(":D", "<img src=\"/images/grin.gif\">");
+		// :D
+		m_MessageConvertMap.put("~@~", "<img src=\"/images/poop.gif\">");
+		// :(|)
+		m_MessageConvertMap.put(":\\(\\|\\)", "<img src=\"/images/monkey.gif\">");
+		
 	}
 
 	public static synchronized ChatService get_instance()
@@ -51,24 +77,24 @@ public class ChatService implements IChatService
 			{
 			case get_chat_data:
 				// if we have a paramater, we remove the timestamps
-				if (params.length > 0)
+				if (params.length > 2)
 				{
 					showTS = false;
 				}
 				
-				retVal.append(getChatData(showTS));
+				retVal.append(getChatData(showTS, Long.parseLong(params[0])));
 				break;
 			case get_chat_page:
 				retVal.append(getChatPage());
 				break;
 			case send_message:
 				// if we have a paramater, we remove the timestamps
-				if (params.length > 2)
+				if (params.length > 3)
 				{
 					showTS = false;
 				}
 				
-				retVal.append(sendMessage(params[0], showTS));
+				retVal.append(sendMessage(params[0], Long.parseLong(params[1]), showTS));
 				break;
 			case new_message:
 				newMessage(params[0], params[1]);
@@ -92,7 +118,7 @@ public class ChatService implements IChatService
 		
 		// replace place holders in template
 		HTMLTemplate t = new HTMLTemplate("chat_page.html");
-		t.AddValueToTemplate("CHAT_DATA", getChatData(true));
+		t.AddValueToTemplate("CHAT_DATA", getChatData(true, 0));
 		
 		tracer.TraceToConsole("Chat page was generated!");
 		return t.CompileTemplate();
@@ -100,10 +126,11 @@ public class ChatService implements IChatService
 	
 	/**
 	 * generates the chat data
+	 * @param showTimestamp Show the time stamps?
+	 * @param lastUpdate will get changes after that time
 	 * @return
-	 * @throws ParseException 
 	 */
-	private String getChatData(boolean showTimestamp)
+	private String getChatData(boolean showTimestamp, long lastUpdate)
 	{
 		tracer.TraceToConsole("Genrating the chat data");
 		
@@ -111,26 +138,30 @@ public class ChatService implements IChatService
 		
 		for (ChatBuddyData data : m_ChatData)
 		{
-			String leftMost = " leftMost";
-			if (showTimestamp)
+			if (data.IsMessageNew(lastUpdate))
 			{
-				sb.append(String.format("<div class=\"timestamp chatdata%s\">[%s]</div>", leftMost, data.TimeStamp));
-				leftMost = "";
+				String leftMost = " leftMost";
+				if (showTimestamp)
+				{
+					sb.append(String.format("<div class=\"timestamp chatdata%s\">[%s]</div>", leftMost, data.TimeStamp));
+					leftMost = "";
+				}
+				
+				sb.append(String.format("<div class=\"fromWho chatdata%s\">%s</div>", leftMost, data.TitleName));
+				sb.append("<div class=\"chatdata\">");
+				sb.append(processMessage(data.Message));
+				sb.append("</div><div class=\"padder\"></div><br>\n");
 			}
-			
-			sb.append(String.format("<div class=\"fromWho chatdata%s\">%s</div>", leftMost, data.TitleName));
-			sb.append("<div class=\"chatdata\">");
-//			String newMessage = data.Message.replaceAll("\\*([\\w+\\s?]*)\\*", "<b>$1</b>");
-			sb.append(processMessage(data.Message));
-			sb.append("</div><div class=\"padder\"></div><br>\n");
 		}
 
-		if (!showTimestamp && sb.length() > 0)
+		tracer.TraceToConsole("Show timestamp is: " + showTimestamp);
+		
+		if (!showTimestamp && m_ChatData.size() > 0 && sb.length() == 0)
 		{
 			ChatBuddyData lastMessage = m_ChatData.get(m_ChatData.size() - 1);
 			if (lastMessage.IsMessageOld())
 			{
-				sb.append("<div class=\"timestamp chatdata leftMost\">Last message received on ");
+				sb.append("_L<div class=\"timestamp chatdata leftMost\">Last message received on ");
 				sb.append(lastMessage.TimeStamp);
 				sb.append("</div>\n");
 			}
@@ -153,8 +184,9 @@ public class ChatService implements IChatService
 	
 	/**
 	 * Sends the given msg parameter to all friends by calling the friend’s function
-	 * @param message
+	 * @param message the message to send
 	 * @param showTS should we show the timestamp at the returned data?
+	 * @param lastUpdate The last update time of the page (will return all changes since)
 	 * @throws HttpResponseParsingException 
 	 * @throws HttpHeaderParsingException 
 	 * @throws IOException 
@@ -162,7 +194,7 @@ public class ChatService implements IChatService
 	 * @throws UnknownHostException 
 	 * @return (new) Chat data 
 	 */
-	private String sendMessage(String message, boolean showTS)
+	private String sendMessage(String message, long lastUpdate, boolean showTS)
 	{
 		// add my message to log
 		newMessage(message, "me, dummy!");
@@ -187,7 +219,7 @@ public class ChatService implements IChatService
 			}
 		}
 		
-		return getChatData(showTS);
+		return getChatData(showTS, lastUpdate);
 	}
 	
 	/**

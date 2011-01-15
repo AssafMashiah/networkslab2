@@ -9,7 +9,7 @@ public class ChatBuddyData
 	
 	public ChatBuddyData(String nickname, String IP, String message)
 	{
-		m_LoggedAt = System.currentTimeMillis();
+		m_LoggedAt = Lab2Utils.GetEpochFromUTC();
 		TimeStamp = Lab2Utils.GetTimeStamp("HH:mm:ss");
 		TitleName = String.format("%s (%s): ", nickname,IP);
 		Message = message;
@@ -35,6 +35,23 @@ public class ChatBuddyData
 		}
 		
 		return oldMessage;
+	}
+	
+	/**
+	 * If the message is older then the given timestamp, we get true
+	 * @param timeStamp The timestamp to check against
+	 * @return
+	 */
+	public boolean IsMessageNew(long timeStamp)
+	{
+		boolean newMessage = false;
+		
+		if (m_LoggedAt > timeStamp)
+		{
+			newMessage = true;
+		}
+		
+		return newMessage;
 	}
 	
 	public String toString()
