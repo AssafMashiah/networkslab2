@@ -63,7 +63,7 @@ public class FriendService implements IFriendService
 				AckFriendRequest(params[0]);
 				break;
 			case add_friend_source:
-				AddFriendSource(params[1], Integer.parseInt(params[0]));
+				AddFriendSource(params[0], Integer.parseInt(params[1]));
 				break;
 			case add_me_as_friend_request:
 				AddMeAsFriendRequest(params[0]);
@@ -78,7 +78,7 @@ public class FriendService implements IFriendService
 				LookForFriends();
 				break;
 			case remove_friend:
-				RemoveFriend(params[1], Integer.parseInt(params[0]));
+				RemoveFriend(params[0], Integer.parseInt(params[1]));
 				break;
 			default:
 				// this is a 404 error, it should not happen (right now no code
