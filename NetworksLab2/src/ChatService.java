@@ -43,15 +43,14 @@ public class ChatService implements IChatService
 		m_MessageConvertMap.put("=\\)", "<img src=\"/images/equal_smile.gif\">");
 		// :)
 		m_MessageConvertMap.put(":\\)", "<img src=\"/images/smile.gif\">");
-		// :(
-		m_MessageConvertMap.put(":\\(", "<img src=\"/images/frown.gif\">");
 		// :D
 		m_MessageConvertMap.put(":D", "<img src=\"/images/grin.gif\">");
 		// ~@~
 		m_MessageConvertMap.put("~@~", "<img src=\"/images/poop.gif\">");
 		// :(|)
 		m_MessageConvertMap.put(":\\(\\|\\)", "<img src=\"/images/monkey.gif\">");
-		
+		// :(
+		m_MessageConvertMap.put(":\\(", "<img src=\"/images/frown.gif\">");		
 	}
 
 	public static synchronized ChatService get_instance()
