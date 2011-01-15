@@ -47,7 +47,7 @@ public class ChatService implements IChatService
 		m_MessageConvertMap.put(":\\(", "<img src=\"/images/frown.gif\">");
 		// :D
 		m_MessageConvertMap.put(":D", "<img src=\"/images/grin.gif\">");
-		// :D
+		// ~@~
 		m_MessageConvertMap.put("~@~", "<img src=\"/images/poop.gif\">");
 		// :(|)
 		m_MessageConvertMap.put(":\\(\\|\\)", "<img src=\"/images/monkey.gif\">");
