@@ -48,6 +48,7 @@ Jonathan Levison 039869193 Assaf Mashiah 061110185
 
 16. Added server header in responses
 17. Added custom response headers to support multiple response mime parts (for images, css and icons as already mentioned)
+18. Chat area will auto-scroll down as needed
 
 
                           oooo$$$$$$$$$$$$oooo
