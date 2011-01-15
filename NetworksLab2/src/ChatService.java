@@ -50,7 +50,9 @@ public class ChatService implements IChatService
 		// :(|)
 		m_MessageConvertMap.put(":\\(\\|\\)", "<img src=\"/images/monkey.gif\">");
 		// :(
-		m_MessageConvertMap.put(":\\(", "<img src=\"/images/frown.gif\">");		
+		m_MessageConvertMap.put(":\\(", "<img src=\"/images/frown.gif\">");
+		// handle double space
+		m_MessageConvertMap.put(" ", "&nbsp;");
 	}
 
 	public static synchronized ChatService get_instance()
