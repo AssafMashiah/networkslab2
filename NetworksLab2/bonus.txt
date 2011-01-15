@@ -1,0 +1,79 @@
+                                  /   \       
+ _                        )      ((   ))     (
+(@)                      /|\      ))_((     /|\
+|-|                     / | \    (/\|/\)   / | \                      (@)
+| | -------------------/--|-voV---\`|'/--Vov-|--\---------------------|-|
+|-|                         '^`   (o o)  '^`                          | |
+| |                               `\Y/'                               |-|
+|-|                                                                   | |
+| |         B         O          N            U           S!          |-|
+|-|                                                                   | |
+| |                                                                   |-|
+|_|___________________________________________________________________| |
+(@)              l   /\ /         ( (       \ /\   l                `\|-|
+                 l /   V           \ \       V   \ l                  (@)
+                 l/                _) )_          \I
+                                   `\ /'
+				     `  Jeff Ferris
+
+
+Jonathan Levison 039869193 Assaf Mashiah 061110185
+
+
+1.  Added support for binary responses
+2.  Added Image service, CSS Service and javascript service (all work on the same infrastructure)
+    Due to the requirement that no subfolders are included, everything is flat file-system wise.
+3.  Added support for 301 redirect and 408 timeout on requests.
+4.  Wrote the chat service in a way where it can work with asynchronous javascript (AJAX)
+5.  Added a pictures in the main page (well, added a picture in every page because of CSS)
+6.  Added CSS styling to all pages, making it look a bit better :)
+7.  Added favicons to pages :) (you get a different one for IE, because IE must work differently then others :/ )
+    Also added thier response content-type header (x-icon)
+8.  In the chat, added timestamps for messages, and a checkbox to define if you want to see them or not
+9.  In the chat, added support for emoticons!
+    The support emotes are: :p ;-) ;^) :-| ;) x-( B-) =) :) :( :D ~@~ :(|)
+    You can also use *bold* _italic_ and -strike-  -----> and they stack
+10. In the chat, Enter will send the message - everything is async
+11. The Async infrastructure in the chat working in delta mode, you only get newer information - to save data :)
+12. The tracer object (from lab one) got an upgrade, you can now enable it to write a log file to disk!
+13. There are graceful, user friendly messages if you have no friend or no files to share
+
+14. Super-cool mac-like buttons (using sliding window CSS technique)
+
+15. Added support in the configuration file to lock down which IP the machine should use
+    Without this, on a system with more than one IP address, the application cannot know on which subnet to send the broadcast
+    It can also not know which IP address to report to friends (it may report an internal IP address
+    
+    This configuration is optional, and if not used java will get the localhost IP via InetAddress.getLocalHost().getHostAddress()
+
+16. Added server header in responses
+17. Added custom response headers to support multiple response mime parts (for images, css and icons as already mentioned)
+
+
+                          oooo$$$$$$$$$$$$oooo
+                      oo$$$$$$$$$$$$$$$$$$$$$$$$o
+                   oo$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$o         o$   $$ o$
+   o $ oo        o$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$o       $$ $$ $$o$
+oo $ $ "$      o$$$$$$$$$    $$$$$$$$$$$$$    $$$$$$$$$o       $$$o$$o$
+"$$$$$$o$     o$$$$$$$$$      $$$$$$$$$$$      $$$$$$$$$$o    $$$$$$$$
+  $$$$$$$    $$$$$$$$$$$      $$$$$$$$$$$      $$$$$$$$$$$$$$$$$$$$$$$
+  $$$$$$$$$$$$$$$$$$$$$$$    $$$$$$$$$$$$$    $$$$$$$$$$$$$$  """$$$
+   "$$$""""$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$     "$$$
+    $$$   o$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$     "$$$o
+   o$$"   $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$       $$$o
+   $$$    $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" "$$$$$$ooooo$$$$o
+  o$$$oooo$$$$$  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$   o$$$$$$$$$$$$$$$$$
+  $$$$$$$$"$$$$   $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$     $$$$""""""""
+ """"       $$$$    "$$$$$$$$$$$$$$$$$$$$$$$$$$$$"      o$$$
+            "$$$o     """$$$$$$$$$$$$$$$$$$"$$"         $$$
+              $$$o          "$$""$$$$$$""""           o$$$
+               $$$$o                                o$$$"
+                "$$$$o      o$$$$$$o"$$$$o        o$$$$
+                  "$$$$$oo     ""$$$$o$$$$$o   o$$$$""
+                     ""$$$$$oooo  "$$$o$$$$$$$$$"""
+                        ""$$$$$$$oo $$$$$$$$$$
+                                """"$$$$$$$$$$$
+                                    $$$$$$$$$$$$
+                                     $$$$$$$$$$"
+                                      "$$$""""
+
